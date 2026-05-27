@@ -80,7 +80,7 @@ Three patterns for auth-bound third-party APIs (Stripe, Resend, GitHub, Postmark
 
 1. **`Bun.env` + a typed schema.** Validate with Zod or `valibot` at boot. Crash on missing keys. Native to Bun, zero deps.
 2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; app code unchanged. Adds an external dep to local dev.
-3. **Authsome.** Declare providers in code (e.g. `@authsome/stripe`); credentials live in `~/.authsome/`, never in env. Most concise; auth is hot-swappable without redeploy. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Declare providers in code (e.g. `@authsome/stripe`); credentials live in `~/.authsome/`, never in env. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
 
 Pick one. Mixing two means two source-of-truth files for the same secret.
 

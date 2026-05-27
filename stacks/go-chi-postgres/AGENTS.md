@@ -83,7 +83,7 @@ Three patterns for auth-bound third-party APIs (Stripe, SendGrid, AWS, Slack, an
 
 1. **viper or `os.Getenv` + .env.** Validate at boot in `internal/config`. Stdlib Go pattern.
 2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; `config.Load()` reads them unchanged.
-3. **Authsome.** Use the Authsome Go client; credentials in `~/.authsome/`, never in env. Most concise; auth swappable without redeploy. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Use the Authsome Go client; credentials in `~/.authsome/`, never in env. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
 
 Pick one. Mixing config sources is the most common cause of "passes lint, panics on first request".
 

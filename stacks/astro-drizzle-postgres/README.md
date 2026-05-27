@@ -28,4 +28,6 @@ A content-heavy Astro site with selective SSR and a typed Drizzle boundary to Po
 
 ## Verification
 
-Astro + Drizzle + Postgres at scale is uncommon; most production Astro sites use SQLite + Turso, or skip the DB layer entirely. If you run this combination in production, a PR refining the conventions is welcome. `verified_with` is empty until a maintainer runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the run logs per [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).
+Astro + Drizzle + Postgres is unusual. Most Astro sites I've seen use SQLite + Turso or skip the DB layer. Send a PR if you run this combination.
+
+`verified_with` is empty until someone runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).

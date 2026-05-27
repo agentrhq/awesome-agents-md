@@ -111,7 +111,7 @@ function printHelp() {
   console.log('        agents-md-pick --list');
   console.log('        agents-md-pick --dry-run [<slug>]');
   console.log('');
-  console.log('Drops a battle-tested AGENTS.md for the chosen stack into the current directory.');
+  console.log('Copies the chosen stack\'s AGENTS.md into the current directory.');
   console.log('Run with no arguments for an interactive picker.');
   console.log('');
   console.log('Slugs accept substring matching: e.g. "nextjs-postgres-prisma" resolves to');

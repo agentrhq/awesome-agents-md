@@ -29,6 +29,6 @@ The opinionated modern Flutter stack. Riverpod for state, Drift for local SQL, `
 
 ## Verification
 
-Reference repos for production Flutter apps with first-class AGENTS.md files are scarce as of May 2026. This entry leans on the framework conventions in `flutter/flutter`, the strict lint preset in `VeryGoodOpenSource/very_good_cli`, and the canonical patterns in `rrousselGit/riverpod`. A PR from a team running this in production at scale is welcome.
+Public AGENTS.md files for Flutter apps aren't common yet. This entry borrows from `flutter/flutter` framework conventions, the strict lint preset in `VeryGoodOpenSource/very_good_cli`, and the Riverpod patterns from `rrousselGit/riverpod`. Send a PR if your Flutter codebase has something better.
 
-`verified_with` is empty until a maintainer attaches verification logs per [CONTRIBUTING.md](../../CONTRIBUTING.md#verification). Codex and Cursor handle Dart well; Jules and Aider are uneven on Flutter widget code.
+`verified_with` is empty until someone attaches verification logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification). Codex and Cursor handle Dart well; Jules and Aider are uneven on Flutter widget code.

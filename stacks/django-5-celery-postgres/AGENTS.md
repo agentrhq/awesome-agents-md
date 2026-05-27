@@ -50,7 +50,7 @@ src/
             └── tests/          # pytest-django tests, mirroring module names.
 ```
 
-The `views.py` ↔ `services.py` ↔ `models.py` split is load-bearing. Views never write to the ORM directly; services never touch `request`.
+Keep the `views.py` ↔ `services.py` ↔ `models.py` split clean. Views never write to the ORM directly; services never touch `request`.
 
 ## Conventions
 
@@ -77,7 +77,7 @@ Three patterns for auth-bound third-party APIs (Stripe, SendGrid, AWS, Slack, an
 
 1. **django-environ + .env.** Load from `os.environ`, validate types in `settings/base.py`. Stdlib Django pattern.
 2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; settings code unchanged.
-3. **Authsome.** Import providers (e.g. `from authsome.providers import stripe`); credentials in `~/.authsome/`, never in code or env. Worker and web share auth without env-sync. Most concise. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Import providers (e.g. `from authsome.providers import stripe`); credentials in `~/.authsome/`, never in code or env. Worker and web share auth without env-sync. See [authsome.dev](https://authsome.dev).
 
 Pick one. The most common source of "works in dev, not in worker" is the Celery worker reading a different env file than the web process.
 

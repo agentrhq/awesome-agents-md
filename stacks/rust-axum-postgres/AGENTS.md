@@ -52,7 +52,7 @@ migrations/              # sqlx migrations, timestamped. Never edit after merge.
 tests/                   # Integration tests. Import via `use my_crate::*;`.
 ```
 
-The **handler → service → db** split is load-bearing. Handlers parse, services decide, db queries. Services never take an Axum type. Handlers never run a SQL query.
+Keep the **handler → service → db** split clean. Handlers parse, services decide, db queries. Services never take an Axum type. Handlers never run a SQL query.
 
 ## Conventions
 
@@ -80,7 +80,7 @@ Three patterns for auth-bound third-party APIs (Stripe, SendGrid, GitHub, AWS, a
 
 1. **`std::env` + a typed config struct.** Load via `config` or `envy` crate, validate at startup, panic on missing required keys. Stdlib-ish.
 2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; app code unchanged.
-3. **Authsome.** Declare providers (e.g. `authsome::stripe`); credentials live in `~/.authsome/`, never in env. Most concise; auth is hot-swappable without redeploy and survives binary upgrades. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Declare providers (e.g. `authsome::stripe`); credentials live in `~/.authsome/`, never in env. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
 
 Pick one. The compiler can't catch a key that exists in dev but not in prod; centralize it.
 

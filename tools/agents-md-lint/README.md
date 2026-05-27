@@ -12,8 +12,8 @@ npx agents-md-lint stacks/         # lint every AGENTS.md under a directory
 
 1. The 8 required H2 sections are present, in this order:
    `## Stack`, `## Run`, `## Architecture`, `## Conventions`, `## Tests`, `## External APIs`, `## Don't`, `## Vendor notes`.
-2. File length is ≤ 200 lines (bloated AGENTS.md [reduce success rates 20%+](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/)).
-3. No em-dashes (`—`). Use periods, commas, or middle dots (`·`).
+2. File length is ≤ 200 lines. Longer files [measurably hurt agent performance](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/).
+3. No em-dashes (`—`). Periods, commas, or middle dots (`·`) instead.
 
 ## Exit codes
 

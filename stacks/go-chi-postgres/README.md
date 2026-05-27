@@ -29,6 +29,6 @@ The minimal, idiomatic Go web stack. Stdlib `net/http` semantics via chi's route
 
 ## Verification
 
-Pilot entry. **Reference repos for chi-specific AGENTS.md are scarce.** This entry leans on chi's own examples and sqlc conventions; if you maintain a chi-based service at scale, a PR refining this entry is welcome.
+Chi-specific AGENTS.md files are hard to find publicly. This entry leans on chi's own examples and sqlc conventions. If your service uses chi differently, send a PR.
 
-`verified_with` is empty until a maintainer runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the run logs per [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).
+`verified_with` is empty until someone runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).

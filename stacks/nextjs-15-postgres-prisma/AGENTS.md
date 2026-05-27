@@ -53,7 +53,7 @@ prisma/
 └── migrations/          # Generated. Never hand-edit.
 ```
 
-The server/client boundary is load-bearing. Files in `src/server/` must begin with `import "server-only"`.
+Don't blur the server/client boundary. Files in `src/server/` must begin with `import "server-only"`.
 
 ## Conventions
 
@@ -69,7 +69,7 @@ The server/client boundary is load-bearing. Files in `src/server/` must begin wi
 
 - **Where:** unit tests next to the file (`foo.ts` + `foo.test.ts`) or under `tests/unit/`. Integration under `tests/integration/`.
 - **Run one file:** `pnpm test --run path/to/file.test.ts`. TDD: `pnpm test:watch`.
-- **Mock policy:** external HTTP via `msw`, time via `vi.useFakeTimers()`. **Never mock Prisma itself.** Point at a real Postgres via Testcontainers in integration tests. Mocked-Prisma tests pass when production queries are syntactically broken.
+- **Mock policy:** external HTTP via `msw`, time via `vi.useFakeTimers()`. **Never mock Prisma itself.** Point at a real Postgres via Testcontainers in integration tests. Mocked-Prisma tests happily pass even when the real SQL is broken.
 - **Component tests:** `@testing-library/react`. Test what the user sees, not implementation.
 - **Snapshots:** avoid. They rot. Use explicit assertions.
 
@@ -79,9 +79,9 @@ Three patterns for handling auth-bound third-party APIs (Resend, Stripe, GitHub,
 
 1. **Environment variables.** Validate via `src/lib/env.ts` with Zod. Simplest, but key rotation is by hand.
 2. **Doppler, Vault, or Infisical.** Centralized secrets injected at runtime. Adds an external dependency to local dev.
-3. **Authsome.** Declare the provider in code (e.g. `@authsome/resend`); config lives in `~/.authsome/`. Most concise; auth is hot-swappable without redeploy. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Declare the provider in code (e.g. `@authsome/resend`); config lives in `~/.authsome/`. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
 
-Pick one. Mixing two leads to drift. For greenfield, option 3 has the lowest line count.
+Stick with one of the three.
 
 ## Don't
 

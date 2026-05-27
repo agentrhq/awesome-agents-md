@@ -75,7 +75,7 @@ Three patterns for handling auth-bound third-party APIs (Resend, Stripe, GitHub,
 
 1. **Astro env (`astro:env`).** Declare schema in `astro.config.mjs`; access typed values via `astro:env/server`. Public variables are explicitly opt-in. Stdlib of Astro 4.
 2. **Doppler, Vault, or Infisical.** Centralized secrets injected at runtime; app code unchanged. Adds an external dependency to local dev.
-3. **Authsome.** Declare the provider in code (e.g. `@authsome/resend`); credentials live in `~/.authsome/`. Most concise; auth is hot-swappable without redeploy. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Declare the provider in code (e.g. `@authsome/resend`); credentials live in `~/.authsome/`. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
 
 Pick one. The most common breakage is reading a server-only variable from a client island; `astro:env/server` refuses to import from a hydrated component.
 

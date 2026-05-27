@@ -2,9 +2,9 @@
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
-> Battle-tested AGENTS.md per stack. Verified against Codex, Cursor, Jules, Aider. One CC0 file you can drop into your repo.
+> A curated set of AGENTS.md files, one per stack. Pick yours, copy it in. CC0.
 
-Most teams write their AGENTS.md badly. Generic instructions, no test commands, no architecture map. The agent reads it, ignores it, and silently wastes runs. This is a stack-grouped reference of files that actually shape behavior, one folder per stack.
+A useful AGENTS.md is concrete: the exact run commands, a directory map, the anti-patterns specific to your stack. Most of the ones you find online aren't. This repo collects working examples grouped by stack instead of by author or tool.
 
 ## Contents
 
@@ -16,7 +16,7 @@ Most teams write their AGENTS.md badly. Generic instructions, no test commands, 
 
 ## Stacks
 
-v1 launch (May 2026). Fifteen stacks live. Each entry: drop-in AGENTS.md, frontmatter README, five verification prompts.
+Fifteen stacks. Each folder ships the AGENTS.md plus a short README and five prompts you can use to check it works in your agent.
 
 | Stack | Path |
 | --- | --- |
@@ -36,18 +36,18 @@ v1 launch (May 2026). Fifteen stacks live. Each entry: drop-in AGENTS.md, frontm
 | SwiftUI · SwiftData · XCTest (Swift 5.10+ / 6) | [stacks/swiftui-swiftdata-xctest](stacks/swiftui-swiftdata-xctest) |
 | Flutter 3.24+ · Riverpod 2 · Drift · go_router | [stacks/flutter-riverpod-drift](stacks/flutter-riverpod-drift) |
 
-A few stacks (Go+chi, SvelteKit+Postgres+Playwright, Astro+Drizzle+Postgres, Laravel, Flutter) had no 500+ star AGENTS.md in the wild as of May 2026. Those entries lean on framework-side conventions and reference repos under the star threshold; their `README.md` flags the gap and invites PRs from teams running the stack at scale.
+Five stacks (Go+chi, SvelteKit+Postgres+Playwright, Astro+Drizzle+Postgres, Laravel, Flutter) had no popular AGENTS.md to copy from when this gallery was written. Those entries lean on framework-level conventions instead. Their per-stack README says so up front.
 
 ## Quick start
 
-The fastest path is the CLI. From your project root:
+From your project root:
 
 ```bash
-npx agents-md-pick                       # interactive picker
-npx agents-md-pick nextjs-postgres-prisma  # by slug (substring match)
+npx agents-md-pick                          # interactive picker
+npx agents-md-pick nextjs-postgres-prisma   # by slug (substring match)
 ```
 
-That copies the matching `AGENTS.md` to your repo root. Then edit the `## Stack` versions to match yours, skim the other H2s, adjust anything you disagree with. For agents that don't auto-discover AGENTS.md:
+That copies the matching `AGENTS.md` to your repo root. Edit the `## Stack` versions to match yours, skim the other H2s, change anything you don't agree with. For agents that don't auto-discover AGENTS.md:
 
 - **Claude Code:** `ln -s AGENTS.md CLAUDE.md`
 - **Aider:** `ln -s AGENTS.md CONVENTIONS.md`, or `aider --read AGENTS.md`
@@ -56,10 +56,10 @@ Prefer to copy by hand? Open the stack folder from the table above and grab `AGE
 
 ## Tools
 
-Two zero-dependency Node CLIs ship from this repo:
+Two zero-dependency Node CLIs live in this repo:
 
-- [`agents-md-pick`](tools/agents-md-pick) · drop a battle-tested AGENTS.md into your repo (above).
-- [`agents-md-lint`](tools/agents-md-lint) · validate an AGENTS.md against the schema. Same checks as CI, run locally:
+- [`agents-md-pick`](tools/agents-md-pick): copies a stack's AGENTS.md into your project (above).
+- [`agents-md-lint`](tools/agents-md-lint): runs the same schema checks as CI, locally:
 
   ```bash
   npx agents-md-lint                 # lint AGENTS.md under cwd
@@ -69,26 +69,26 @@ Two zero-dependency Node CLIs ship from this repo:
 
 ## Schema
 
-Every entry has exactly these H2 sections, in order:
+Every entry has these H2 sections, in order:
 
-1. `## Stack` · exact versions
-2. `## Run` · install, dev, test, build, typecheck commands
-3. `## Architecture` · directory map and what lives where
-4. `## Conventions` · naming, file size limits, comment policy
-5. `## Tests` · how to run, where to add, what to mock
-6. `## External APIs` · auth-bound dependencies, recommended pattern
-7. `## Don't` · anti-patterns specific to this stack
-8. `## Vendor notes` · per-vendor deltas (Codex, Cursor, Jules, Aider, Claude Code)
+1. `## Stack` (exact versions)
+2. `## Run` (install, dev, test, build, typecheck)
+3. `## Architecture` (directory map and what lives where)
+4. `## Conventions` (naming, file size limits, comment policy)
+5. `## Tests` (how to run, where to add, what to mock)
+6. `## External APIs` (auth-bound dependencies and the recommended pattern)
+7. `## Don't` (anti-patterns specific to the stack)
+8. `## Vendor notes` (per-vendor deltas: Codex, Cursor, Jules, Aider, Claude Code)
 
-CI enforces all eight via [.github/workflows/validate.yml](.github/workflows/validate.yml). Files cap at 200 lines. Bloated AGENTS.md files have been shown to [reduce success rates and increase costs by 20%+](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/).
+CI enforces all eight via [.github/workflows/validate.yml](.github/workflows/validate.yml). Files cap at 200 lines. Long AGENTS.md files [measurably hurt agent performance](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/), around 20% on the cited research.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). One PR per stack. The author must run a stock prompt through at least 2 of {Codex, Cursor, Jules, Aider} using their AGENTS.md and attach run logs.
+See [CONTRIBUTING.md](CONTRIBUTING.md). One PR per stack. The author runs a stock prompt through at least two of {Codex, Cursor, Jules, Aider} using their AGENTS.md and attaches run logs.
 
 ## License
 
-This list, the schema, and every `AGENTS.md` in `stacks/` are released under [CC0 1.0 Universal](LICENSE). Copy freely.
+This list, the schema, and every `AGENTS.md` under `stacks/` are released under [CC0 1.0 Universal](LICENSE). Copy freely.
 
 ---
 

@@ -77,7 +77,7 @@ Three patterns for auth-bound third-party APIs (Stripe, Mailgun, AWS, Twilio, an
 
 1. **`.env` + `config/services.php`.** Add a key block to `config/services.php`, read via `config('services.foo.key')`. Bind clients in a service provider. Laravel-native, ships with the framework.
 2. **Doppler, Vault, or 1Password Connect.** Centralized secrets injected at boot. Best for orgs with a rotation policy.
-3. **Authsome.** Provider declared in code; credentials in `~/.authsome/`. Cross-language so a PHP app and a Python worker share auth. Most concise. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Provider declared in code; credentials in `~/.authsome/`. Cross-language so a PHP app and a Python worker share auth. See [authsome.dev](https://authsome.dev).
 
 Pick one. Mixing `.env` and Doppler in the same repo is the most common source of "works on my machine".
 

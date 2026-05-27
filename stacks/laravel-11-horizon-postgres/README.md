@@ -29,6 +29,6 @@ The modern Laravel monolith. Horizon for Redis-backed queues, Postgres as the pr
 
 ## Verification
 
-Pilot entry. Reference repos for production Laravel codebases with first-class AGENTS.md files are scarce as of May 2026. This entry leans on framework conventions in `laravel/laravel` and accumulated practice in `LaravelDaily/laravel-tips`. A PR from a team running this in production at scale is welcome.
+Laravel codebases that publish a real AGENTS.md aren't common yet. This entry leans on `laravel/laravel` framework conventions and the patterns in `LaravelDaily/laravel-tips`. Send a PR with whatever your team's AGENTS.md actually says.
 
-`verified_with` is empty until a maintainer attaches verification logs per [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).
+`verified_with` is empty until someone attaches verification logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).

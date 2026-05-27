@@ -6,7 +6,7 @@ One PR per stack. The PR title must be `Add <Display Name>`, e.g. `Add Bun · Ho
 
 ```
 stacks/<stack-slug>/
-├── AGENTS.md           # the drop-in artifact
+├── AGENTS.md           # the file users copy into their repo
 ├── README.md           # frontmatter and "why this stack"
 ├── example-prompts.md  # 5 verification prompts
 └── changelog.md        # only when the file is updated
@@ -39,7 +39,7 @@ license: CC0-1.0
 7. `## Don't`
 8. `## Vendor notes`
 
-CI enforces all eight. Files cap at 200 lines (the bloat ceiling: see [research on AGENTS.md and success rate](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/)).
+CI enforces all eight. Files cap at 200 lines. Longer files [hurt agent performance](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/), so keep it short.
 
 ## Verification
 
@@ -53,13 +53,13 @@ Before opening the PR:
 3. At least 2 of the 4 agents must produce compilable, convention-following code on the first try.
 4. Save the run logs (terminal output or screenshots) and attach them to the PR.
 
-If you cannot get all 4 agents to follow conventions, ship the entry with the verified subset in `verified_with` and open an issue tagged `needs-<vendor>-verification`. Honest beats perfect.
+If one of the four agents won't cooperate, ship the entry with the agents that did work in `verified_with` and open an issue tagged `needs-<vendor>-verification`. We'd rather have an honest entry than a missing one.
 
 ## Style
 
-- No em-dashes. Use periods, commas, or middle dots (`·`).
-- Each H2's body should be useful on its own. A reader skimming should be able to jump in mid-file.
-- Cite at least 3 production repos that use this stack at the end of AGENTS.md.
+- No em-dashes. Periods, commas, or middle dots (`·`) instead.
+- Each H2 should make sense on its own. People will skim and skip in.
+- Cite at least 3 production repos that use this stack at the bottom of AGENTS.md.
 
 ## License
 

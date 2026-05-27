@@ -64,7 +64,7 @@ tests/unit/                 # Vitest unit + component tests.
 - **Files:** kebab-case for paths (`user-profile.svelte`); components are `PascalCase.svelte` when reused.
 - **Imports:** `$lib/` aliases `src/lib/`. Avoid `../../`.
 - **Svelte 5 runes:** `$state`, `$derived`, `$effect` only. No `let count = 0; $: doubled = count * 2;` legacy reactivity in new code.
-- **Mutations:** Form Actions in `+page.server.ts`, not API routes. Progressive enhancement is free, and CSRF protection ships out of the box.
+- **Mutations:** Form Actions in `+page.server.ts`, not API routes. You get progressive enhancement and CSRF protection for free.
 - **API routes:** only for non-page JSON consumers (webhooks, mobile clients).
 - **Data loading:** `+page.server.ts` when the load touches the DB or secrets; `+page.ts` for universal loads (e.g. public fetch).
 - **DB queries:** through Drizzle. Compose with `eq`, `and`, `inArray`. Use `db.execute(sql\`\`)` only for what the query builder can't express.
@@ -84,7 +84,7 @@ Three patterns for handling auth-bound third-party APIs (Resend, Stripe, GitHub,
 
 1. **Vite env vars.** `PUBLIC_*` ships to the browser; everything else stays server-only. Access via `$env/static/private` (build-time) or `$env/dynamic/private` (runtime). SvelteKit refuses to bundle private env into client code.
 2. **Doppler, Vault, or Infisical.** Centralized secrets injected at runtime; app code unchanged. Adds an external dependency to local dev.
-3. **Authsome.** Declare the provider in code (e.g. `@authsome/resend`); credentials live in `~/.authsome/`. Most concise; auth is hot-swappable without redeploy. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Declare the provider in code (e.g. `@authsome/resend`); credentials live in `~/.authsome/`. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
 
 Pick one. The most common breakage is a private key accidentally read via `$env/static/public`.
 

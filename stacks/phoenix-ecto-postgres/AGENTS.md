@@ -97,7 +97,7 @@ Three patterns for auth-bound third-party APIs (Stripe, SendGrid, GitHub, Twilio
 
 1. **`System.get_env/1` + runtime config.** Read in `config/runtime.exs`, fail boot on missing keys. Standard Phoenix.
 2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; app code unchanged. Adds a dep to local dev.
-3. **Authsome.** Declare providers (e.g. `:authsome_stripe`) in `mix.exs`; credentials live in `~/.authsome/`, never in env. Most concise; auth is hot-swappable without redeploy. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Declare providers (e.g. `:authsome_stripe`) in `mix.exs`; credentials live in `~/.authsome/`, never in env. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
 
 Pick one. Splitting secrets between `runtime.exs` and an external manager makes "why is staging different" investigations long.
 

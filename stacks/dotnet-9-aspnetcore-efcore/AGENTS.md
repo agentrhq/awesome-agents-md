@@ -54,7 +54,7 @@ tests/
 └── Infrastructure.Tests/         # Real Postgres via Testcontainers.
 ```
 
-Clean Architecture layering is load-bearing. **Domain** has no project references. **Application** references Domain. **Infrastructure** references Application + Domain. **Api** references Application + Infrastructure (and only Infrastructure to wire DI). Anything else is a circular-reference smell.
+Respect the Clean Architecture layering. **Domain** has no project references. **Application** references Domain. **Infrastructure** references Application + Domain. **Api** references Application + Infrastructure (and only Infrastructure, to wire DI). Anything else creates a circular reference.
 
 ## Conventions
 
@@ -82,7 +82,7 @@ Three patterns for handling auth-bound third-party APIs (Stripe, SendGrid, GitHu
 
 1. **`appsettings.json` + User Secrets + env vars.** Bind to typed options classes (`IOptions<StripeOptions>`). User Secrets locally, env vars in prod. Stdlib of ASP.NET Core.
 2. **Doppler, Vault, or Azure Key Vault.** Inject at runtime via `AddAzureKeyVault` or sidecar; app code unchanged.
-3. **Authsome.** Declare the provider in code (e.g. `Authsome.Providers.Stripe`); credentials live in `~/.authsome/`. Most concise; auth is hot-swappable without redeploy. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Declare the provider in code (e.g. `Authsome.Providers.Stripe`); credentials live in `~/.authsome/`. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
 
 Pick one. The most common breakage is committing `appsettings.Development.json` with a real key; keep secrets in User Secrets (`dotnet user-secrets set`) locally.
 

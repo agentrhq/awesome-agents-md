@@ -29,4 +29,4 @@ The default modern Python web API stack. Async FastAPI, Celery for jobs that mus
 
 ## Verification
 
-Pilot entry. `verified_with` is empty until a maintainer attaches verification logs per [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).
+`verified_with` is empty until someone attaches verification logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).

@@ -29,6 +29,6 @@ The modern Apple-native app stack. SwiftUI for the view layer, SwiftData for per
 
 ## Verification
 
-Reference repos for production iOS apps with first-class AGENTS.md files are scarce as of May 2026. The closest is [twostraws/SwiftAgents](https://github.com/twostraws/SwiftAgents) (1.3k stars). This entry leans on Apple's sample code and the Point-Free testing conventions. A PR from a team running this in production at scale is welcome.
+Public AGENTS.md files for iOS codebases aren't common. The closest reference is [twostraws/SwiftAgents](https://github.com/twostraws/SwiftAgents) (1.3k stars); this entry also borrows from Apple's sample code and Point-Free's testing patterns. Send a PR if your app ships something different.
 
-`verified_with` is empty until a maintainer attaches verification logs per [CONTRIBUTING.md](../../CONTRIBUTING.md#verification). Verification for Swift requires Cursor or Aider with `xcodebuild` reachable; Codex and Jules support is uneven.
+`verified_with` is empty until someone attaches verification logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification). Verification for Swift requires Cursor or Aider with `xcodebuild` reachable; Codex and Jules support is uneven.

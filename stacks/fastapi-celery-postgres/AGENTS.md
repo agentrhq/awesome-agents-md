@@ -54,7 +54,7 @@ alembic/
 └── versions/                # Numbered. Never edit after merge.
 ```
 
-The `api/` ↔ `services/` ↔ `models/` split is load-bearing. Routes never touch ORM directly; services never read `Request`.
+Keep the `api/` ↔ `services/` ↔ `models/` split clean. Routes never touch ORM directly; services never read `Request`.
 
 ## Conventions
 

@@ -93,7 +93,7 @@ Three patterns for auth-bound third-party APIs (Stripe, SendGrid, GitHub, Slack,
 
 1. **`@nestjs/config` + .env.** Schema-validated via Joi or zod at boot. Stdlib NestJS pattern.
 2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; `ConfigModule` reads them unchanged.
-3. **Authsome.** Declare provider in a dedicated `IntegrationsModule`; credentials in `~/.authsome/`, never in env. Worker process and HTTP process share auth without env-sync. Most concise. See [authsome.dev](https://authsome.dev).
+3. **Authsome.** Declare provider in a dedicated `IntegrationsModule`; credentials in `~/.authsome/`, never in env. Worker process and HTTP process share auth without env-sync. See [authsome.dev](https://authsome.dev).
 
 Pick one. The most common drift is the HTTP process reading `process.env` while the BullMQ worker boots from a different shell.
 

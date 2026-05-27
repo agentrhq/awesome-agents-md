@@ -28,4 +28,4 @@ A Clean Architecture .NET 9 service: Minimal APIs in front, EF Core 9 against Po
 
 ## Verification
 
-`verified_with` is empty until a maintainer runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the run logs per [CONTRIBUTING.md](../../CONTRIBUTING.md#verification). The three production references all ship AGENTS.md files combining ASP.NET Core, EF Core, and Postgres at scale, so the conventions here are well grounded; a PR confirming agent behavior across the four vendors is welcome.
+`verified_with` is empty until someone runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification). The three production references all ship AGENTS.md files for ASP.NET Core + EF Core + Postgres, so the conventions here are well grounded. Send a PR if you've confirmed them across the four agents.

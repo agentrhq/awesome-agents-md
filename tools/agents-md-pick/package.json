@@ -1,7 +1,7 @@
 {
   "name": "agents-md-pick",
   "version": "0.1.0",
-  "description": "Drop a battle-tested AGENTS.md into your repo. One stack, one CC0 file.",
+  "description": "Copies a stack-specific AGENTS.md into your repo. One stack, one CC0 file.",
   "bin": {
     "agents-md-pick": "bin/agents-md-pick.js"
   },

@@ -28,4 +28,6 @@ A server-first SvelteKit app with a typed Drizzle boundary to Postgres, Form Act
 
 ## Verification
 
-Reference repos that combine all four (SvelteKit + Drizzle + Postgres + Playwright) at scale are scarce. This entry leans on framework-side conventions; a PR from a team running this combination in production at scale is welcome. `verified_with` is empty until a maintainer runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the run logs per [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).
+Popular repos that ship all four (SvelteKit + Drizzle + Postgres + Playwright) plus an AGENTS.md were hard to find when this was written, so it leans on framework conventions. Send a PR if you run the full combo.
+
+`verified_with` is empty until someone runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).

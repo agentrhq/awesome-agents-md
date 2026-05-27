@@ -16,7 +16,7 @@ The opinionated TypeScript backend stack: dependency injection, decorator-driven
 
 - **NestJS over plain Express/Fastify.** DI graph, module system, and a single way to do guards, interceptors, pipes, and filters. Trades flexibility for consistency across a team.
 - **Prisma over TypeORM.** Generated client, declarative schema, fewer footguns. Decision is contested if you need complex polymorphic queries; revisit before scaling past 50 models.
-- **BullMQ over BullMQ Pro / Inngest / Trigger.dev.** Free, battle-tested, Redis-only. `@nestjs/bullmq` plugs directly into the DI graph so workers share services with the HTTP process.
+- **BullMQ over BullMQ Pro / Inngest / Trigger.dev.** Free, mature, Redis-only. `@nestjs/bullmq` plugs directly into the DI graph so workers share services with the HTTP process.
 - **Jest 29 over Vitest.** NestJS's testing primitives (`@nestjs/testing`) target Jest. Vitest works but you'll wire it up yourself.
 - **pnpm over npm/yarn.** Speed, strict dep isolation, monorepo-friendly if the product grows.
 
@@ -29,4 +29,4 @@ The opinionated TypeScript backend stack: dependency injection, decorator-driven
 
 ## Verification
 
-Pilot entry. `verified_with` is empty until a maintainer runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the run logs per [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).
+`verified_with` is empty until someone runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).
