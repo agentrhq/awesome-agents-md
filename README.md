@@ -16,22 +16,24 @@ Most teams write their AGENTS.md badly. Generic instructions, no test commands, 
 
 ## Stacks
 
-Pilot launch (May 2026). Three stacks live, nine queued for v1.
+v1 launch (May 2026). Twelve stacks live. Each entry: drop-in AGENTS.md, frontmatter README, five verification prompts.
 
-| Stack | Status | Path |
-|---|---|---|
-| Next.js 15 · Postgres 16 · Prisma 5 · Tailwind 3 · Vitest 2 | live | [stacks/nextjs-15-postgres-prisma](stacks/nextjs-15-postgres-prisma) |
-| Rails 8 · Sidekiq 7 · Postgres 16 · RSpec 6 | live | [stacks/rails-8-sidekiq-postgres](stacks/rails-8-sidekiq-postgres) |
-| FastAPI 0.115 · Celery 5 · Postgres 16 · pytest 8 | live | [stacks/fastapi-celery-postgres](stacks/fastapi-celery-postgres) |
-| Django 5 · Celery · Postgres · pytest | queued | |
-| NestJS · Prisma · Redis · Jest | queued | |
-| Go · chi · Postgres · testify | queued | |
-| Bun · Hono · SQLite · bun:test | queued | |
-| Rust · Axum · Postgres · sqlx | queued | |
-| Elixir · Phoenix · Ecto · ExUnit | queued | |
-| SvelteKit · Drizzle · Postgres · Playwright | queued | |
-| Astro · Postgres · Drizzle · Vitest | queued | |
-| .NET 9 (ASP.NET Core) · EF Core · Postgres · xUnit | queued | |
+| Stack | Path |
+| --- | --- |
+| Next.js 15 · Postgres 16 · Prisma 5 · Tailwind 3 · Vitest 2 | [stacks/nextjs-15-postgres-prisma](stacks/nextjs-15-postgres-prisma) |
+| Rails 8 · Sidekiq 7 · Postgres 16 · RSpec 6 | [stacks/rails-8-sidekiq-postgres](stacks/rails-8-sidekiq-postgres) |
+| FastAPI 0.115 · Celery 5 · Postgres 16 · pytest 8 | [stacks/fastapi-celery-postgres](stacks/fastapi-celery-postgres) |
+| Django 5.1 · DRF 3.15 · Celery 5.4 · Postgres 16 · pytest 8 | [stacks/django-5-celery-postgres](stacks/django-5-celery-postgres) |
+| NestJS 10 · Prisma 5 · BullMQ · Redis 7 · Jest 29 | [stacks/nestjs-10-prisma-redis](stacks/nestjs-10-prisma-redis) |
+| Go 1.23 · chi v5 · pgx v5 · sqlc · testify | [stacks/go-chi-postgres](stacks/go-chi-postgres) |
+| Bun 1.1 · Hono 4 · SQLite · Drizzle 0.30 · bun:test | [stacks/bun-hono-sqlite](stacks/bun-hono-sqlite) |
+| Rust 1.80 · Axum 0.7 · sqlx 0.8 · Postgres 16 · tokio 1 | [stacks/rust-axum-postgres](stacks/rust-axum-postgres) |
+| Elixir 1.17 · Phoenix 1.7 · Ecto 3 · Postgres 16 · Oban · ExUnit | [stacks/phoenix-ecto-postgres](stacks/phoenix-ecto-postgres) |
+| SvelteKit 2 · Svelte 5 · Drizzle 0.30 · Postgres 16 · Playwright · Vitest 2 | [stacks/sveltekit-drizzle-postgres](stacks/sveltekit-drizzle-postgres) |
+| Astro 4 · Drizzle 0.30 · Postgres 16 · Vitest 2 | [stacks/astro-drizzle-postgres](stacks/astro-drizzle-postgres) |
+| .NET 9 · ASP.NET Core 9 · EF Core 9 · Postgres 16 · xUnit · Testcontainers | [stacks/dotnet-9-aspnetcore-efcore](stacks/dotnet-9-aspnetcore-efcore) |
+
+A few stacks (Go+chi, SvelteKit+Postgres+Playwright, Astro+Drizzle+Postgres) had no 500+ star AGENTS.md in the wild as of May 2026. Those entries lean on framework-side conventions and reference repos under the star threshold; their `README.md` flags the gap and invites PRs from teams running the stack at scale.
 
 ## Quick start
 
