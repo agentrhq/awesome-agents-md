@@ -8,11 +8,65 @@ A useful AGENTS.md is concrete: the exact run commands, a directory map, the ant
 
 ## Contents
 
+- [What is AGENTS.md?](#what-is-agentsmd)
+- [How this repo helps](#how-this-repo-helps)
 - [Stacks](#stacks)
 - [Quick start](#quick-start)
+- [Tools](#tools)
 - [Schema](#schema)
+- [Best practices](#best-practices)
 - [Contributing](#contributing)
 - [License](#license)
+
+## What is AGENTS.md?
+
+AGENTS.md is a Markdown file at the root of your repo. Coding agents read it before they edit anything and treat it as house rules.
+
+OpenAI Codex started the convention. Cursor, Google Jules, and Aider all read it. Claude Code reads it via a symlink (`ln -s AGENTS.md CLAUDE.md`).
+
+Without one, the agent guesses your conventions and gets a lot wrong: wrong test command, wrong file paths, mocked DB instead of real, `OFFSET` pagination on a large table. With a good one, it stops guessing.
+
+A short example (Next.js):
+
+```markdown
+# AGENTS.md
+
+## Stack
+- Node.js 20 LTS, pnpm 9
+- Next.js 15 (App Router, React 19)
+- Postgres 16 + Prisma 5
+- Tests: Vitest 2
+
+## Run
+- Install: `pnpm install --frozen-lockfile`
+- Dev: `pnpm dev` (port 3000)
+- Test one file: `pnpm test --run path/to/file.test.ts`
+
+## Don't
+- Don't call `prisma` from a client component. Use a server action or `src/server/`.
+- Don't put secrets in `NEXT_PUBLIC_*` (those ship to the browser).
+- Don't paginate with `OFFSET` past page 50.
+```
+
+That's a slice of [stacks/nextjs-15-postgres-prisma/AGENTS.md](stacks/nextjs-15-postgres-prisma/AGENTS.md). The full file has eight H2 sections; the ones above are three of them.
+
+## How this repo helps
+
+This isn't documentation about AGENTS.md. It's the actual files, ready to copy.
+
+For each of fifteen real-world stack combinations, you get:
+
+- A complete `AGENTS.md` (around 100 lines) tuned to that stack.
+- A short `README.md` explaining the stack choices and what to tune.
+- Five prompts you can run through your agent to confirm the file works.
+- A CC0 license, so you can copy without attribution.
+
+Two CLIs ship alongside:
+
+- `agents-md-pick`: `npx agents-md-pick nextjs-prisma` copies the right file into your project root.
+- `agents-md-lint`: validates your own AGENTS.md against the same schema this gallery uses.
+
+The workflow: pick the stack closest to yours, run the CLI, edit a few lines (versions, paths) to match your repo. You have a working AGENTS.md without writing one from scratch.
 
 ## Stacks
 
@@ -81,6 +135,20 @@ Every entry has these H2 sections, in order:
 8. `## Vendor notes` (per-vendor deltas: Codex, Cursor, Jules, Aider, Claude Code)
 
 CI enforces all eight via [.github/workflows/validate.yml](.github/workflows/validate.yml). Files cap at 200 lines. Long AGENTS.md files [measurably hurt agent performance](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/), around 20% on the cited research.
+
+## Best practices
+
+What makes an AGENTS.md actually shape agent behavior, not just decorate the repo:
+
+1. **Be concrete.** `pnpm test --run path/to/file.test.ts` beats "follow testing conventions". Exact commands, exact paths.
+2. **Include a directory map.** Agents perform measurably better when they don't have to crawl the folder structure to figure out where things go.
+3. **Anti-patterns earn their keep.** A `## Don't` section catches the mistakes that linters can't. "Don't dispatch jobs in `after_commit`", "don't blur the server/client boundary", and similar.
+4. **Stack-specific, not generic.** Pin exact versions: "Tailwind 3.4" tells the agent more than "Tailwind". "Vitest 2" tells it more than "a test runner".
+5. **Keep it short.** Cap at 200 lines. Bloated files hurt performance by around 20% on [cited research](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/).
+6. **Per-vendor notes at the bottom.** Each agent has quirks (Claude Code needs the symlink; Aider needs `--read AGENTS.md`).
+7. **Update when you upgrade.** The `last_verified` date in this gallery's per-stack README is for tracking when the file was last checked.
+
+Every entry here follows all seven. If you write your own from scratch, lift the structure.
 
 ## Contributing
 
