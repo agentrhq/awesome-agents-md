@@ -14,10 +14,10 @@
   "license": "CC0-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/agentr-labs/awesome-agents-md.git",
+    "url": "https://github.com/agentrhq/awesome-agents-md.git",
     "directory": "tools/agents-md-lint"
   },
-  "homepage": "https://github.com/agentr-labs/awesome-agents-md/tree/main/tools/agents-md-lint",
+  "homepage": "https://github.com/agentrhq/awesome-agents-md/tree/main/tools/agents-md-lint",
   "keywords": [
     "agents-md",
     "codex",

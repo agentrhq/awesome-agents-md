@@ -4,7 +4,7 @@ display_name: Next.js 15 · Postgres 16 · Prisma 5 · Tailwind 3 · Vitest 2
 components: [nextjs-15, react-19, postgres-16, prisma-5, tailwind-3, vitest-2]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

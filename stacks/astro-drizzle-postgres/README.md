@@ -4,7 +4,7 @@ display_name: Astro 4 · Drizzle 0.30 · Postgres 16 · Vitest 2
 components: [astro-4, drizzle-0.30, postgres-16, vitest-2]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

@@ -4,7 +4,7 @@ display_name: Django 5.1 · DRF 3.15 · Celery 5.4 · Postgres 16 · pytest 8
 components: [django-5, drf-3.15, celery-5.4, redis-7, postgres-16, pytest-8]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

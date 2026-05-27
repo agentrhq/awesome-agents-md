@@ -4,7 +4,7 @@ display_name: Go 1.23 · chi v5 · pgx v5 · sqlc · testify
 components: [go-1.23, chi-v5, pgx-v5, sqlc, postgres-16, testify-v1]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

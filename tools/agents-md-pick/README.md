@@ -11,7 +11,7 @@ npx agents-md-pick --dry-run go-chi      # print source URL without writing
 
 ## What it does
 
-1. Resolves the slug (exact or unambiguous substring match) against the [12 stacks in the gallery](https://github.com/agentr-labs/awesome-agents-md/tree/main/stacks).
+1. Resolves the slug (exact or unambiguous substring match) against the [12 stacks in the gallery](https://github.com/agentrhq/awesome-agents-md/tree/main/stacks).
 2. Reads the AGENTS.md from a local `stacks/` directory if running from inside the awesome-agents-md repo, otherwise fetches from `raw.githubusercontent.com`.
 3. Writes it to `./AGENTS.md` in the current directory. Confirms before overwriting.
 4. Prints next-step hints for Claude Code (`ln -s AGENTS.md CLAUDE.md`) and Aider (`ln -s AGENTS.md CONVENTIONS.md`).

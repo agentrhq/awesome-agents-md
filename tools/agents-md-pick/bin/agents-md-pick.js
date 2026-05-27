@@ -24,7 +24,7 @@ const STACKS = [
   'flutter-riverpod-drift',
 ];
 
-const REMOTE_BASE = 'https://raw.githubusercontent.com/agentr-labs/awesome-agents-md/main/stacks';
+const REMOTE_BASE = 'https://raw.githubusercontent.com/agentrhq/awesome-agents-md/main/stacks';
 
 function fetch(url, redirects = 5) {
   return new Promise((resolveP, reject) => {

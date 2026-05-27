@@ -4,7 +4,7 @@ display_name: Flutter 3.24+ · Riverpod 2 · Drift · go_router
 components: [flutter-3.24, dart-3, riverpod-2, drift, go_router, very_good_analysis]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

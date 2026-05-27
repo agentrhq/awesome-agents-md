@@ -4,7 +4,7 @@ display_name: .NET 9 · ASP.NET Core 9 · EF Core 9 · Postgres 16 · xUnit · T
 components: [dotnet-9, aspnetcore-9, efcore-9, postgres-16, xunit, testcontainers-postgresql]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

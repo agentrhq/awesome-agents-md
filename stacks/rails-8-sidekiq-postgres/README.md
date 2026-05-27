@@ -4,7 +4,7 @@ display_name: Rails 8 · Sidekiq 7 · Postgres 16 · RSpec 6
 components: [rails-8, sidekiq-7, sidekiq-cron, postgres-16, rspec-6, hotwire]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

@@ -4,7 +4,7 @@ display_name: Laravel 11 · Horizon · Postgres 16 · Pest 3
 components: [laravel-11, php-8.3, horizon, redis-7, postgres-16, pest-3]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

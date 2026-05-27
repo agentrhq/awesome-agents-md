@@ -4,7 +4,7 @@ display_name: Rust 1.80 · Axum 0.7 · sqlx 0.8 · Postgres 16 · tokio 1
 components: [rust-1.80, axum-0.7, sqlx-0.8, postgres-16, tokio-1, thiserror-1]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

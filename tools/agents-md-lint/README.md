@@ -1,6 +1,6 @@
 # agents-md-lint
 
-Lint an AGENTS.md against the [awesome-agents-md](https://github.com/agentr-labs/awesome-agents-md) schema. Zero dependencies, Node 18+.
+Lint an AGENTS.md against the [awesome-agents-md](https://github.com/agentrhq/awesome-agents-md) schema. Zero dependencies, Node 18+.
 
 ```bash
 npx agents-md-lint                 # lint AGENTS.md under cwd recursively

@@ -4,7 +4,7 @@ display_name: FastAPI 0.115 · Celery 5 · Postgres 16 · pytest 8
 components: [fastapi-0.115, celery-5, redis-7, postgres-16, sqlalchemy-2, alembic, pytest-8, ruff, mypy, uv]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

@@ -4,7 +4,7 @@ display_name: SwiftUI · SwiftData · XCTest (Swift 5.10+ / 6)
 components: [swift-5.10, swift-6, swiftui, swiftdata, xctest, testing-framework, swiftlint]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 

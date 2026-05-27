@@ -4,7 +4,7 @@ display_name: NestJS 10 · Prisma 5 · BullMQ · Redis 7 · Jest 29
 components: [nestjs-10, prisma-5, redis-7, bullmq, jest-29, typescript-strict]
 verified_with: []
 last_verified: 2026-05-27
-maintainer: agentr-labs
+maintainer: agentrhq
 license: CC0-1.0
 ---
 
