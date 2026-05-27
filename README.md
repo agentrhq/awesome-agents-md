@@ -11,7 +11,7 @@ A useful AGENTS.md is concrete: the exact run commands, a directory map, the ant
 - [What is AGENTS.md?](#what-is-agentsmd)
 - [How this repo helps](#how-this-repo-helps)
 - [Stacks](#stacks)
-- [Quick start](#quick-start)
+- [How to use this](#how-to-use-this)
 - [Tools](#tools)
 - [Schema](#schema)
 - [Best practices](#best-practices)
@@ -92,21 +92,48 @@ Fifteen stacks. Each folder ships the AGENTS.md plus a short README and five pro
 
 Five stacks (Go+chi, SvelteKit+Postgres+Playwright, Astro+Drizzle+Postgres, Laravel, Flutter) had no popular AGENTS.md to copy from when this gallery was written. Those entries lean on framework-level conventions instead. Their per-stack README says so up front.
 
-## Quick start
+## How to use this
+
+You have a project (say, a Next.js app with Postgres and Prisma). Your team uses Cursor or Claude Code or Codex. You want the agent to follow your conventions instead of guessing. The five-minute path:
+
+**1. Find your stack in the table above.**
+
+Look for the row closest to your project. You don't need an exact match. If you run Next.js with Prisma, the "Next.js 15 · Postgres 16 · Prisma 5 · Tailwind 3 · Vitest 2" row is the one to grab. Use the closest fit and tweak it next.
+
+**2. Get the AGENTS.md into your repo.**
 
 From your project root:
 
 ```bash
 npx agents-md-pick                          # interactive picker
-npx agents-md-pick nextjs-postgres-prisma   # by slug (substring match)
+npx agents-md-pick nextjs-postgres-prisma   # by slug, substring match works
 ```
 
-That copies the matching `AGENTS.md` to your repo root. Edit the `## Stack` versions to match yours, skim the other H2s, change anything you don't agree with. For agents that don't auto-discover AGENTS.md:
+That writes `AGENTS.md` to your current directory. Prefer doing it by hand? Open the folder linked in the table and copy `AGENTS.md` yourself.
 
-- **Claude Code:** `ln -s AGENTS.md CLAUDE.md`
-- **Aider:** `ln -s AGENTS.md CONVENTIONS.md`, or `aider --read AGENTS.md`
+**3. Tweak the file for your project.**
 
-Prefer to copy by hand? Open the stack folder from the table above and grab `AGENTS.md`.
+Open `AGENTS.md` and:
+
+- Update the versions in `## Stack` to match what you actually run (e.g. `pnpm 10` instead of `pnpm 9`).
+- Adjust paths in `## Architecture` if your folder layout differs.
+- Skim `## Don't` and remove rules that don't apply to your codebase.
+- Add anything stack-specific that we missed.
+
+This usually takes about five minutes. You don't need to keep anything you disagree with.
+
+**4. Make your agent read the file.**
+
+Codex, Cursor, Jules, and Aider auto-discover `AGENTS.md` at the repo root, so most setups don't need extra steps. Two exceptions:
+
+- **Claude Code:** `ln -s AGENTS.md CLAUDE.md` (symlink so Claude reads it too).
+- **Aider:** run with `aider --read AGENTS.md`, or symlink: `ln -s AGENTS.md CONVENTIONS.md`.
+
+**5. Sanity-check it.**
+
+Each stack folder has an `example-prompts.md` with five prompts (paginated endpoint, background job, migration with backfill, refactor, external API call). Pick one, run it through your agent. If the agent uses the right test runner, hits the right paths, and avoids the anti-patterns you listed, the file is doing its job. If not, the AGENTS.md needs more detail or your agent needs a nudge.
+
+That's the whole flow. The file lives in your repo from then on; every agent run reads it before editing.
 
 ## Tools
 
