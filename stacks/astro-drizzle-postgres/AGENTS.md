@@ -1,11 +1,11 @@
-# AGENTS.md · Astro 5 · Drizzle 0.36 · Turso (libSQL) · Vitest 2
+# AGENTS.md · Astro 6.3 · Drizzle 0.45 · Turso (libSQL) · Vitest 4.1.7
 
 ## Stack
 
 - **Runtime:** Node.js 22.x LTS, package manager **pnpm 10** via `corepack enable`.
-- **Framework:** Astro 5.x with the `@astrojs/node` adapter and per-route `prerender`. Static by default, opt-in to SSR per route.
-- **Database:** Turso (libSQL, SQLite at the wire) via `@libsql/client`. Accessed through **Drizzle ORM 0.36+** with the `drizzle-orm/libsql` driver.
-- **Testing:** Vitest 2 (unit and component). Astro Container API for component tests.
+- **Framework:** Astro 6.3 with the `@astrojs/node` adapter and per-route `prerender`. Static by default, opt-in to SSR per route.
+- **Database:** Turso (libSQL, SQLite at the wire) via `@libsql/client`. Accessed through **Drizzle ORM 0.45+** with the `drizzle-orm/libsql` driver.
+- **Testing:** Vitest 4.1.7 (unit and component). Astro Container API for component tests.
 - **Typescript:** strict mode via Astro's defaults (`tsconfig.json` extends `astro/tsconfigs/strict`).
 
 ## Run

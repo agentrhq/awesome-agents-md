@@ -1,10 +1,10 @@
-# AGENTS.md · Rails 8.0 · Sidekiq 7 · Postgres 16 · RSpec 6 · Kamal 2
+# AGENTS.md · Rails 8.1.3 · Sidekiq 8.1.5 · Postgres 16 · RSpec 6 · Kamal 2
 
 ## Stack
 
-- **Ruby:** 3.4.x (managed via mise or rbenv; `.ruby-version` is source of truth).
-- **Framework:** Rails 8.0.
-- **Background jobs:** Sidekiq 7, `sidekiq-cron` for schedules. Solid Queue is the new Rails 8 default; this stack stays on Sidekiq because the operator tooling (sidekiqmon, sidekiq-pro, observability dashboards) is what most existing teams already run.
+- **Ruby:** 4.0.5 (managed via mise or rbenv; `.ruby-version` is source of truth).
+- **Framework:** Rails 8.1.3.
+- **Background jobs:** Sidekiq 8.1.5, `sidekiq-cron` for schedules. Solid Queue is the Rails 8 default; this stack stays on Sidekiq because the operator tooling (sidekiqmon, sidekiq-pro, observability dashboards) is what most existing teams already run.
 - **Database:** Postgres 16, ActiveRecord. One adapter.
 - **Testing:** RSpec 6, FactoryBot, faker, vcr for HTTP fixtures.
 - **Asset pipeline:** Propshaft + importmap-rails. No webpacker, no esbuild build step.

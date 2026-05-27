@@ -1,7 +1,7 @@
 ---
 stack_slug: spring-boot-postgres
-display_name: Java 21 · Spring Boot 3.4 · Spring Data JPA · Flyway · Postgres 17 · JUnit 5 · Testcontainers
-components: [java-21, spring-boot-3-4, spring-data-jpa, flyway-11, postgres-17, junit-5, testcontainers, gradle-8]
+display_name: Java 25 · Spring Boot 4.0.6 · Spring Data JPA · Flyway 12.6 · Postgres 17 · JUnit 5 · Testcontainers
+components: [java-25, spring-boot-4.0.6, spring-data-jpa, flyway-12.6, postgres-17, junit-5, testcontainers, gradle-8]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq
@@ -14,8 +14,8 @@ The default enterprise JVM web service stack. Constructor-injected services, JPA
 
 ## Why these choices
 
-- **Java 21 LTS.** Virtual threads make the synchronous `RestController` model competitive with reactive without the cognitive cost of `Mono`/`Flux`.
-- **Spring Boot 3.4.** Convention-over-config, native compilation path exists if you need it, broad library coverage.
+- **Java 25 LTS.** Virtual threads make the synchronous `RestController` model competitive with reactive without the cognitive cost of `Mono`/`Flux`. Spring Boot 4 baselines Java 21+; 25 LTS is the recommended default.
+- **Spring Boot 4.0.6.** Convention-over-config, native compilation path exists if you need it, broad library coverage.
 - **JPA over jOOQ or plain JDBC.** Productive for CRUD-shaped domains. The cost: implicit queries, lazy loading footguns. For OLAP or heavy reporting, drop in jOOQ alongside.
 - **Flyway over Liquibase.** Plain SQL migrations are easier to review than XML changesets.
 - **Testcontainers over H2.** H2 lies. Real Postgres in tests catches dialect drift early.

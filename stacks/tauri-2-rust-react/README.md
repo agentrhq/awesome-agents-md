@@ -1,7 +1,7 @@
 ---
 stack_slug: tauri-2-rust-react
-display_name: Tauri 2 · Rust 1.85 · React 19 · TypeScript 5.6 · Vite 6 · SQLite · Vitest · Playwright
-components: [tauri-2, rust-1-85, react-19, typescript-5-6, vite-6, sqlx, vitest-2, playwright-1-45]
+display_name: Tauri 2.11 · Rust 1.95 · React 19 · TypeScript 5.9 · Vite 8.0.14 · SQLite · Vitest · Playwright 1.60
+components: [tauri-2.11, rust-1.95, react-19, typescript-5.9, vite-8.0.14, sqlx, vitest-2, playwright-1.60, pnpm-11]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq
@@ -16,9 +16,9 @@ A modern desktop app stack. Rust backend with an IPC seam, React 19 frontend bun
 
 - **Tauri 2 over Electron.** ~5MB installer instead of ~100MB, system WebView instead of bundled Chromium, Rust backend for native-speed work.
 - **React 19 + TS over Vue or Svelte.** Largest ecosystem, the strongest TypeScript story, easy hire pool.
-- **Vite 6.** ESM-native dev server, lighting-fast HMR, paired well with Tauri's reload model.
+- **Vite 8.0.14.** ESM-native dev server, lighting-fast HMR, paired well with Tauri's reload model.
 - **sqlx over diesel.** Async-first, compile-time SQL checking against a real DB, less ceremony for desktop scale.
-- **pnpm over npm/yarn.** Speed and strict dep isolation.
+- **pnpm 11 over npm/yarn.** Speed and strict dep isolation.
 - **Playwright for E2E.** Drives the built app reliably across platforms.
 
 ## What to tune

@@ -1,7 +1,7 @@
 ---
 stack_slug: ktor-postgres-exposed
-display_name: Kotlin 2.1 · Ktor 3 · Exposed · Postgres 17 · Kotest · Gradle 8
-components: [kotlin-2-1, ktor-3, exposed, postgres-17, kotest-5, flyway-11, gradle-8, testcontainers]
+display_name: Kotlin 2.3.21 · Ktor 3.5 · Exposed 1.3.0 · Postgres 17 · Kotest · Gradle 8
+components: [kotlin-2.3.21, ktor-3.5, exposed-1.3.0, postgres-17, kotest-5, flyway-12.6, gradle-8, testcontainers, jdk-25]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq
@@ -14,7 +14,7 @@ A modern Kotlin server stack. Suspend route handlers, Exposed for typed SQL, Pos
 
 ## Why these choices
 
-- **Kotlin 2.1 + Ktor 3.** Suspend functions through the entire handler chain. No `CompletableFuture` ceremony, no callback chains.
+- **Kotlin 2.3.21 + Ktor 3.5.** Suspend functions through the entire handler chain. No `CompletableFuture` ceremony, no callback chains.
 - **Exposed over jOOQ or JPA.** Lighter than JPA, more Kotlin-native than jOOQ. The cost: less mature than Hibernate, smaller community.
 - **Postgres + Flyway.** Plain SQL migrations beat DSL-generated DDL once a schema gets real.
 - **Kotest over plain JUnit.** Better assertions, property-based testing, structured spec styles.

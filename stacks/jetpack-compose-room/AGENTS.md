@@ -1,11 +1,11 @@
-# AGENTS.md · Android · Kotlin 2.1 · Jetpack Compose · Room 2.7 · Hilt 2.52 · Coroutines · Coil 3
+# AGENTS.md · Android · Kotlin 2.3.21 · Jetpack Compose · Room 2.8.4 · Hilt 2.52 · Coroutines · Coil 3
 
 ## Stack
 
 - **IDE:** Android Studio Ladybug or Meerkat. AGP 8.7+. Gradle 8.x with the Kotlin DSL.
-- **Language:** Kotlin 2.1 on JDK 21. KSP 2.x replaces KAPT for annotation processing.
-- **UI:** Jetpack Compose for Android (BOM `2026.x.x`). Compose UI 1.7+. Material 3.
-- **Persistence:** Room 2.7+ over SQLite. Type-safe entities, Flow-returning DAOs.
+- **Language:** Kotlin 2.3.21 on JDK 25 LTS. KSP 2.x replaces KAPT for annotation processing.
+- **UI:** Jetpack Compose for Android (BOM `2026.x.x`). Compose UI 1.11.2, Compose Material3 1.4.0.
+- **Persistence:** Room 2.8.4 over SQLite. Type-safe entities, Flow-returning DAOs.
 - **DI:** Hilt 2.52+. KSP processor, no KAPT.
 - **Async:** Coroutines + Flow throughout. `StateFlow` for UI state, `SharedFlow` for one-shot events.
 - **Images:** Coil 3 (`coil-compose`). No Glide or Picasso in new code.

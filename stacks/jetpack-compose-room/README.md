@@ -1,7 +1,7 @@
 ---
 stack_slug: jetpack-compose-room
-display_name: Android · Kotlin 2.1 · Jetpack Compose · Room 2.7 · Hilt 2.52 · Coroutines · Coil 3
-components: [kotlin-2-1, jetpack-compose, room-2-7, hilt-2-52, coroutines, coil-3, ksp-2, gradle-8]
+display_name: Android · Kotlin 2.3.21 · Jetpack Compose · Room 2.8.4 · Hilt 2.52 · Coroutines · Coil 3
+components: [kotlin-2.3.21, jetpack-compose, compose-ui-1.11.2, compose-material3-1.4.0, room-2.8.4, hilt-2.52, coroutines, coil-3, ksp-2, gradle-8, jdk-25]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq

@@ -1,12 +1,12 @@
-# AGENTS.md · Laravel 12 · Horizon · Postgres 16 · Pest 3
+# AGENTS.md · Laravel 13 · Horizon · Postgres 16 · Pest 4
 
 ## Stack
 
-- **PHP:** 8.4.x (managed via Herd, php-version, or asdf; `.php-version` is source of truth).
-- **Framework:** Laravel 12.x.
+- **PHP:** 8.5.6 (managed via Herd, php-version, or asdf; `.php-version` is source of truth).
+- **Framework:** Laravel 13.x.
 - **Queue:** Laravel Horizon 5+ on Redis 7. `--queue=default,critical,low` with explicit weights in `config/horizon.php`.
 - **Database:** Postgres 16 via the `pgsql` connection. Native Schema Builder handles column changes; `doctrine/dbal` is no longer required.
-- **Testing:** Pest 3 (`it()` / `expect()` syntax, PHPUnit 11 underneath), Mockery, Laravel's `RefreshDatabase` trait.
+- **Testing:** Pest 4 (`it()` / `expect()` syntax, PHPUnit 11 underneath), Mockery, Laravel's `RefreshDatabase` trait.
 - **Tooling:** Composer 2, Pint for formatting, Larastan (PHPStan level 6+) for static analysis.
 
 ## Run

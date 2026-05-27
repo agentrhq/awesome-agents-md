@@ -1,13 +1,13 @@
-# AGENTS.md · NestJS 11 · Prisma 6 · BullMQ · Redis 7 · Jest 29
+# AGENTS.md · NestJS 11 · Prisma 7.8 · BullMQ · Redis 7 · Jest 30.4
 
 ## Stack
 
-- **Runtime:** Node.js 22 LTS, **pnpm 10** via `corepack enable`.
+- **Runtime:** Node.js 24 LTS, **pnpm 10** via `corepack enable`.
 - **Framework:** NestJS 11 (modules + DI, decorator-driven). Express 5 under the hood; reflect-metadata, rxjs, and most peer-deps bumped versus v10.
-- **Database:** Postgres 16 via **Prisma 6**. One ORM.
+- **Database:** Postgres 16 via **Prisma 7.8**. One ORM.
 - **Background jobs:** Redis 7 + BullMQ via `@nestjs/bullmq`. Queue per domain.
 - **Validation:** `class-validator` + `class-transformer` on every DTO. Global `ValidationPipe` with `whitelist: true, forbidNonWhitelisted: true`.
-- **Testing:** Jest 29 (NestJS default), `@nestjs/testing` for module test harness, supertest for e2e.
+- **Testing:** Jest 30.4 (NestJS default), `@nestjs/testing` for module test harness, supertest for e2e.
 - **Typescript:** strict mode. No `any`, no non-null `!`, no `as Type` widening.
 - **Lint:** eslint + prettier (NestJS default config), no overrides without justification.
 

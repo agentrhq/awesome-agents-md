@@ -1,9 +1,9 @@
-# AGENTS.md · SwiftUI · SwiftData · Swift Testing (Swift 6 · iOS 18+)
+# AGENTS.md · SwiftUI · SwiftData · Swift Testing (Swift 6.4 · iOS 18+)
 
 ## Stack
 
-- **Swift:** 6.0 stable, strict concurrency on (`-strict-concurrency=complete`).
-- **Platforms:** iOS 18 / iPadOS 18 / macOS 15 minimum. Older deployment targets stay on Core Data and `ObservableObject`.
+- **Swift:** 6.4 stable, strict concurrency on (`-strict-concurrency=complete`).
+- **Platforms:** iOS 18 / iPadOS 18 / macOS 15 minimum. Older deployment targets stay on Core Data and `ObservableObject`. iOS 26 is the current major release; bump the deployment floor only after auditing each dependency.
 - **UI:** SwiftUI. UIKit/AppKit only for what SwiftUI still cannot do (e.g. `UIViewRepresentable` shims).
 - **Persistence:** SwiftData (`@Model`, `ModelContainer`, `ModelContext`). Migrate from Core Data via `VersionedSchema` if applicable.
 - **Testing:** Swift Testing (`import Testing`, `@Test`, `#expect`) is the default for new files. XCTest stays for `XCUITest` and legacy targets.
@@ -105,4 +105,4 @@ For CI, generate `Secrets.xcconfig` from a secret manager (1Password Connect, Do
 
 ---
 
-*Production references:* [twostraws/SwiftAgents](https://github.com/twostraws/SwiftAgents/blob/main/AGENTS.md) · [kuleka/OpenTypeless](https://github.com/kuleka/OpenTypeless/blob/main/clients/macos/AGENTS.md) · [Stygian-Tech/Routines](https://github.com/Stygian-Tech/Routines/blob/main/.agents/agents.md)
+*Production references:* [twostraws/SwiftAgents](https://github.com/twostraws/SwiftAgents/blob/main/AGENTS.md) · [kuleka/OpenTypeless](https://github.com/kuleka/OpenTypeless/blob/main/clients/macos/AGENTS.md) · [gridex/gridex](https://github.com/gridex/gridex/blob/main/macos/AGENTS.md)

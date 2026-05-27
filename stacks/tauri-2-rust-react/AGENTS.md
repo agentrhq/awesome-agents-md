@@ -1,14 +1,14 @@
-# AGENTS.md · Tauri 2 · Rust 1.85 · React 19 · TypeScript 5.6 · Vite 6 · SQLite · Vitest · Playwright
+# AGENTS.md · Tauri 2.11 · Rust 1.95 · React 19 · TypeScript 5.9 · Vite 8.0.14 · SQLite · Vitest · Playwright 1.60
 
 ## Stack
 
-- **Desktop shell:** Tauri 2.x (released late 2024, currently on the 2.11 line). System WebView, Rust backend, IPC via `invoke()`.
-- **Backend language:** Rust stable 1.85+. `rustup show` pins the toolchain via `rust-toolchain.toml`.
-- **Frontend:** React 19 + TypeScript 5.6+. Vite 6 for dev server and build. Strict mode TS, no `any`.
+- **Desktop shell:** Tauri 2.11. System WebView, Rust backend, IPC via `invoke()`.
+- **Backend language:** Rust stable 1.95+. `rustup show` pins the toolchain via `rust-toolchain.toml`.
+- **Frontend:** React 19 + TypeScript 5.9+. Vite 8.0.14 for dev server and build. Strict mode TS, no `any`.
 - **Persistence:** SQLite via `tauri-plugin-sql` (frontend-accessible) or `sqlx` (Rust-side, when business logic needs the DB). Pick one entrypoint per table.
 - **Logging and crashes:** `tauri-plugin-log` for structured logs, `sentry-tauri` for crash reports.
-- **Tests:** `cargo test` for Rust, Vitest 2 for React unit + component, Playwright 1.45+ for E2E driving the built app.
-- **Package manager:** pnpm 9 via `corepack enable`.
+- **Tests:** `cargo test` for Rust, Vitest 2 for React unit + component, Playwright 1.60 for E2E driving the built app.
+- **Package manager:** pnpm 11 via `corepack enable`.
 
 ## Run
 
@@ -119,4 +119,4 @@ Don't ship `VITE_STRIPE_SECRET=...`. Anything `VITE_*`-prefixed ends up in the b
 
 ---
 
-*Production references:* [CapSoftware/Cap](https://github.com/CapSoftware/Cap/blob/main/AGENTS.md) · [lcomplete/huntly](https://github.com/lcomplete/huntly/blob/main/AGENTS.md) · [codeforreal1/compressO](https://github.com/codeforreal1/compressO/blob/main/AGENTS.md)
+*Production references:* [CapSoftware/Cap](https://github.com/CapSoftware/Cap/blob/main/AGENTS.md) · [cjpais/Handy](https://github.com/cjpais/Handy/blob/main/AGENTS.md) · [codeforreal1/compressO](https://github.com/codeforreal1/compressO/blob/main/AGENTS.md)

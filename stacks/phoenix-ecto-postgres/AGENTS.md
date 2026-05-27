@@ -1,9 +1,9 @@
-# AGENTS.md · Elixir 1.18 · Phoenix 1.7 · Ecto 3 · Postgres 16 · Oban · ExUnit
+# AGENTS.md · Elixir 1.19 · Phoenix 1.8.6 · Ecto 3 · Postgres 16 · Oban · ExUnit
 
 ## Stack
 
-- **Language:** Elixir 1.18 on Erlang/OTP 27 or 28. `.tool-versions` pins both (asdf or mise).
-- **Framework:** Phoenix 1.7.x (LiveView 1.0+, function components, verified routes).
+- **Language:** Elixir 1.19 on Erlang/OTP 28. `.tool-versions` pins both (asdf or mise).
+- **Framework:** Phoenix 1.8.6 (LiveView 1.0+, function components, verified routes).
 - **ORM:** Ecto 3.x with `postgrex`. One Repo per app.
 - **Database:** Postgres 16.
 - **Background jobs:** Oban (Postgres-backed). No Sidekiq, no separate Redis.

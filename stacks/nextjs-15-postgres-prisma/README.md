@@ -1,25 +1,25 @@
 ---
 stack_slug: nextjs-15-postgres-prisma
-display_name: Next.js 15 · React 19 · Postgres 16 · Prisma 6 · Tailwind 3 · Vitest 3
-components: [nextjs-15, react-19, postgres-16, prisma-6, tailwind-3, vitest-3, node-22]
+display_name: Next.js 16.2 · React 19 · Postgres 16 · Prisma 7.8 · Tailwind 3 · Vitest 3
+components: [nextjs-16.2, react-19, postgres-16, prisma-7.8, tailwind-3, vitest-3, node-24]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq
 license: CC0-1.0
 ---
 
-# Next.js 15 + React 19 + Postgres + Prisma + Tailwind + Vitest
+# Next.js 16.2 + React 19 + Postgres + Prisma + Tailwind + Vitest
 
 The default modern Node/TS web app stack. Server components by default, Prisma for the database boundary, Tailwind for styling, Vitest for unit and component tests. Turbopack is the dev and build default. PPR splits each route into a static shell plus dynamic islands.
 
 ## Why these choices
 
 - **App Router + React 19 server components.** Pages are static where possible; server components fetch and render; client components stay small. Server actions ("use server") replace most ad-hoc `/api/*` handlers.
-- **PPR and Turbopack.** Partial Prerendering ships a static shell with Suspense holes for dynamic data. Turbopack is the dev and `next build` default in 15.x.
-- **Prisma 6 over raw SQL.** Typed boundary, generated client, migrations as code. The cost is tight coupling to Prisma's query patterns.
+- **PPR and Turbopack as Next.js 16 defaults.** Partial Prerendering ships a static shell with Suspense holes for dynamic data. Turbopack is the dev and `next build` default in 16.x.
+- **Prisma 7.8 over raw SQL.** Typed boundary, generated client, migrations as code. The cost is tight coupling to Prisma's query patterns.
 - **Tailwind 3.4.** Zero-runtime CSS. Pairs well with server components since the stylesheet ships once.
 - **Vitest 3 over Jest.** Native ESM, faster, same API.
-- **pnpm 10 over npm/yarn.** Speed and strict dep isolation. Node 22 LTS.
+- **pnpm 11 over npm/yarn.** Speed and strict dep isolation. Node 24 LTS.
 
 ## What to tune
 

@@ -1,9 +1,9 @@
-# AGENTS.md · FastAPI 0.118 · Celery 5.5 · Postgres 16 · pytest 8
+# AGENTS.md · FastAPI 0.136 · Celery 5.5 · Postgres 16 · pytest 8
 
 ## Stack
 
-- **Python:** 3.13.x. **uv** for env and deps (`uv.lock` is source of truth). No `pip install` directly.
-- **Framework:** FastAPI 0.118+ (Pydantic v2, async-first).
+- **Python:** 3.14.x. **uv** for env and deps (`uv.lock` is source of truth). No `pip install` directly.
+- **Framework:** FastAPI 0.136+ (Pydantic v2, async-first).
 - **ORM:** SQLAlchemy 2.0 (async session via asyncpg) + Alembic for migrations.
 - **Background jobs:** Celery 5.5 with Redis 7 broker. `flower` for inspection.
 - **Testing:** pytest 8, pytest-asyncio, httpx ASGITransport, factory_boy.

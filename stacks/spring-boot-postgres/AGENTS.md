@@ -1,10 +1,10 @@
-# AGENTS.md · Java 21 · Spring Boot 3.4 · Spring Data JPA · Flyway · Postgres 17 · JUnit 5 · Testcontainers
+# AGENTS.md · Java 25 · Spring Boot 4.0.6 · Spring Data JPA · Flyway 12.6 · Postgres 17 · JUnit 5 · Testcontainers
 
 ## Stack
 
-- **Language:** Java 21 LTS (sealed types, virtual threads, pattern matching for switch). `.sdkmanrc` or `.tool-versions` pins the JDK.
-- **Framework:** Spring Boot 3.4 (also valid on the 4.0 line). Spring Web (MVC, not WebFlux unless the service is fully reactive). Spring Security 6.x.
-- **Persistence:** Spring Data JPA over Hibernate 6, Postgres 17 via HikariCP. Flyway 11+ for migrations.
+- **Language:** Java 25 LTS (sealed types, virtual threads, pattern matching for switch). `.sdkmanrc` or `.tool-versions` pins the JDK. Spring Boot 4 baselines Java 21+; 25 LTS is the recommended default.
+- **Framework:** Spring Boot 4.0.6. Spring Web (MVC, not WebFlux unless the service is fully reactive). Spring Security 6.x.
+- **Persistence:** Spring Data JPA over Hibernate 6, Postgres 17 via HikariCP. Flyway 12.6 for migrations.
 - **Build:** Gradle 8.x with the Kotlin DSL (`build.gradle.kts`), Spring Boot plugin, dependency-management plugin. Maven 3.9 works but Gradle is the default for new code.
 - **Tests:** JUnit 5 (`spring-boot-starter-test`), Testcontainers for Postgres in integration tests, MockMvc for slice tests, RestAssured optional for full HTTP.
 - **Lint:** Spotless with `google-java-format` (CI-blocking), Checkstyle optional. Error Prone for static analysis on main.
@@ -79,7 +79,7 @@ Feature slices own their package boundary. `api`, `domain`, `infrastructure` exi
 - **Health:** Spring Boot Actuator. Expose `/actuator/health`, `/actuator/health/liveness`, `/actuator/health/readiness`, and `/actuator/prometheus` (scraped). Keep `/actuator/env` and friends off in prod.
 - **Observability:** Micrometer + the OpenTelemetry exporter (`opentelemetry-spring-boot-starter`). Traces to Tempo/Jaeger, metrics to Prometheus, logs JSON via Logback's `LogstashEncoder`.
 - **Migrations in CI/CD:** run `flywayMigrate` as a separate job before the rolling deploy, not at app startup. Multi-pod startup races otherwise.
-- **CI:** GitHub Actions with `actions/setup-java@v4` and `gradle/actions/setup-gradle@v4` (build cache + dependency cache). Matrix on JDK 21 only unless you support multiple.
+- **CI:** GitHub Actions with `actions/setup-java@v4` and `gradle/actions/setup-gradle@v4` (build cache + dependency cache). Matrix on JDK 25 only unless you support multiple.
 
 ## External APIs
 

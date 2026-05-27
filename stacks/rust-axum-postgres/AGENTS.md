@@ -1,11 +1,11 @@
-# AGENTS.md · Rust 1.85 · Axum 0.8 · sqlx 0.8 · Postgres 16 · tokio 1
+# AGENTS.md · Rust 1.95 · Axum 0.8 · sqlx 0.9.0 · Postgres 16 · tokio 1
 
 ## Stack
 
-- **Toolchain:** Rust 1.85+ stable via `rustup`. `rust-toolchain.toml` pins the project.
+- **Toolchain:** Rust 1.95+ stable via `rustup`. `rust-toolchain.toml` pins the project.
 - **Framework:** Axum 0.8 (tower-based, typed extractors, `IntoResponse` trait). Route syntax uses `{param}` placeholders, not `:param`.
 - **Async runtime:** tokio 1.x with `rt-multi-thread`, `macros`, `signal`.
-- **Database:** Postgres 16 via **sqlx 0.8** with features `postgres`, `runtime-tokio-rustls`, `macros`, `migrate`, `chrono`, `uuid`.
+- **Database:** Postgres 16 via **sqlx 0.9.0** with features `postgres`, `runtime-tokio-rustls`, `macros`, `migrate`, `chrono`, `uuid`.
 - **Errors:** thiserror 1 for typed error enums. Anyhow only at the binary boundary.
 - **Logging:** `tracing` + `tracing-subscriber` with `EnvFilter`. JSON layer in prod, pretty in dev.
 - **Migrations:** sqlx-cli (`cargo install sqlx-cli --no-default-features --features postgres,rustls`).

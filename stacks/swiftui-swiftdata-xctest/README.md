@@ -1,7 +1,7 @@
 ---
 stack_slug: swiftui-swiftdata-xctest
-display_name: SwiftUI · SwiftData · Swift Testing (Swift 6 · iOS 18+)
-components: [swift-6, swiftui, swiftdata, swift-testing, xctest, swiftlint]
+display_name: SwiftUI · SwiftData · Swift Testing (Swift 6.4 · iOS 18+)
+components: [swift-6.4, swiftui, swiftdata, swift-testing, xctest, swiftlint]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq

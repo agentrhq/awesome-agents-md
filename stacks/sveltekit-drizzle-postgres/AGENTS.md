@@ -1,11 +1,11 @@
-# AGENTS.md · SvelteKit 2 · Svelte 5 · Drizzle 0.36 · Postgres 16 · Playwright · Vitest 2
+# AGENTS.md · SvelteKit 2 · Svelte 5 · Drizzle 0.45 · Postgres 16 · Playwright · Vitest 2
 
 ## Stack
 
 - **Runtime:** Node.js 22.x LTS, package manager **pnpm 10** via `corepack enable`.
 - **Framework:** SvelteKit 2.x on Svelte 5 (runes stable: `$state`, `$derived`, `$effect`).
-- **Database:** Postgres 16, accessed via **Drizzle ORM 0.36+** with the `postgres-js` driver.
-- **Testing:** Vitest 2 (unit and component via `@testing-library/svelte`), Playwright 1.50+ (E2E).
+- **Database:** Postgres 16, accessed via **Drizzle ORM 0.45+** with the `postgres-js` driver.
+- **Testing:** Vitest 2 (unit and component via `@testing-library/svelte`), Playwright 1.60+ (E2E).
 - **Typescript:** strict mode. `svelte-check` in CI alongside `tsc --noEmit`.
 
 ## Run

@@ -1,12 +1,12 @@
-# AGENTS.md · Next.js 15 · React 19 · Postgres 16 · Prisma 6 · Vitest 3
+# AGENTS.md · Next.js 16.2 · React 19 · Postgres 16 · Prisma 7.8 · Vitest 3
 
 ## Stack
 
-- **Runtime:** Node.js 22 LTS, package manager **pnpm 10** via `corepack enable`.
-- **Framework:** Next.js 15.x with PPR and Turbopack defaults stable. React 19 (stable).
-- **Database:** Postgres 16, accessed via **Prisma 6** (declarative schema, generated client).
+- **Runtime:** Node.js 24 LTS, package manager **pnpm 11** via `corepack enable`.
+- **Framework:** Next.js 16.2 with PPR and Turbopack as defaults. React 19 (stable).
+- **Database:** Postgres 16, accessed via **Prisma 7.8** (declarative schema, generated client).
 - **Styling:** Tailwind CSS 3.4, no CSS-in-JS at runtime.
-- **Testing:** Vitest 3 (unit and component), Playwright 1.50+ (E2E, optional).
+- **Testing:** Vitest 3 (unit and component), Playwright 1.60+ (E2E, optional).
 - **Typescript:** strict mode. No `any`, no `as Type` widening, no non-null `!`.
 
 ## Run
@@ -78,7 +78,7 @@ In React 19, `params` and `searchParams` in page and layout props are async (Pro
 ## Ops
 
 - **Observability:** Sentry via `@sentry/nextjs` (instrumentation hook + client/server config). Structured logs through `pino` in route handlers and server actions. OpenTelemetry traces ship from Vercel's integration or `@vercel/otel`.
-- **CI:** GitHub Actions. One job runs `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm test --run`. Cache the pnpm store with `actions/setup-node@v4` and `cache: pnpm`. Matrix Node 22 only.
+- **CI:** GitHub Actions. One job runs `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm test --run`. Cache the pnpm store with `actions/setup-node@v4` and `cache: pnpm`. Matrix Node 24 only.
 - **Deploy:** Vercel is the default target; `vercel deploy --prebuilt` in CI for self-hosted Edge. Migrations run before the build step via `pnpm prisma migrate deploy` (separate command, not in `next build`).
 - **Health:** `app/api/health/route.ts` returns 200 plus a Prisma `SELECT 1`. `app/api/ready/route.ts` adds dependency checks (Redis, queue) when present. Vercel hits these; uptime monitors hit `/api/health`.
 

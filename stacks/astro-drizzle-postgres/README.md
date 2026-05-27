@@ -1,22 +1,22 @@
 ---
 stack_slug: astro-drizzle-postgres
-display_name: Astro 5 · Drizzle 0.36 · Turso (libSQL) · Vitest 2
-components: [astro-5, drizzle-0.36, turso-libsql, vitest-2]
+display_name: Astro 6.3 · Drizzle 0.45 · Turso (libSQL) · Vitest 4.1.7
+components: [astro-6.3, drizzle-0.45, turso-libsql, vitest-4.1.7]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq
 license: CC0-1.0
 ---
 
-# Astro 5 + Drizzle + Turso + Vitest
+# Astro 6.3 + Drizzle + Turso + Vitest
 
 A content-heavy Astro site with selective SSR and a typed Drizzle boundary to Turso (libSQL). Static by default, hydrated only where the user actually needs it, replicated to the edge for read-mostly traffic. (The directory keeps its original `astro-drizzle-postgres` slug for stable URLs; the stack itself now targets Turso.)
 
 ## Why these choices
 
-- **Astro 5 with per-route prerender.** Static prerender for most pages, opt-in SSR per route. The minimum-JS default is the whole point.
+- **Astro 6.3 with per-route prerender.** Static prerender for most pages, opt-in SSR per route. The minimum-JS default is the whole point.
 - **Turso (libSQL) over Postgres.** Astro deployments tend to live on edge runtimes (Cloudflare, Vercel Edge) where a TCP Postgres pool is painful. Turso speaks SQLite over HTTPS and replicates near your users.
-- **Drizzle 0.36 over Prisma.** Thin SQL-shaped query builder, no separate engine binary, codegen is just types. The libSQL driver is first-party in Drizzle.
+- **Drizzle 0.45 over Prisma.** Thin SQL-shaped query builder, no separate engine binary, codegen is just types. The libSQL driver is first-party in Drizzle.
 - **Vitest over Jest.** Native ESM, faster, Astro's documented testing stack.
 - **pnpm 10 over npm/yarn.** Speed and strict dep isolation.
 

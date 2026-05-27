@@ -1,7 +1,7 @@
 ---
 stack_slug: django-5-celery-postgres
-display_name: Django 5.2 LTS · DRF 3.16 · Celery 5.5 · Postgres 16 · pytest 8
-components: [django-5.2, drf-3.16, celery-5.5, redis-7, postgres-16, pytest-8, python-3.13, uv]
+display_name: Django 5.2 LTS · DRF 3.17.1 · Celery 5.5 · Postgres 16 · pytest 8
+components: [django-5.2, drf-3.17.1, celery-5.5, redis-7, postgres-16, pytest-8, python-3.13, uv]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq

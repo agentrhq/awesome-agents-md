@@ -1,11 +1,11 @@
-# AGENTS.md · Kotlin 2.1 · Ktor 3 · Exposed · Postgres 17 · Kotest · Gradle 8
+# AGENTS.md · Kotlin 2.3.21 · Ktor 3.5 · Exposed 1.3.0 · Postgres 17 · Kotest · Gradle 8
 
 ## Stack
 
-- **Language:** Kotlin 2.1 on JDK 21. `.tool-versions` pins both (mise or asdf).
-- **Framework:** Ktor 3.0+ on the Netty engine. Coroutines throughout. `suspend fun` route handlers.
-- **ORM:** Exposed (JetBrains) with the DAO API for entities and the DSL for queries. jOOQ is a valid alternative for query-heavy services.
-- **Database:** Postgres 17. HikariCP connection pool. Flyway 11+ for migrations via the Gradle plugin.
+- **Language:** Kotlin 2.3.21 on JDK 25 LTS. `.tool-versions` pins both (mise or asdf).
+- **Framework:** Ktor 3.5 on the Netty engine. Coroutines throughout. `suspend fun` route handlers.
+- **ORM:** Exposed 1.3.0 (JetBrains) with the DAO API for entities and the DSL for queries. jOOQ is a valid alternative for query-heavy services.
+- **Database:** Postgres 17. HikariCP connection pool. Flyway 12.6 for migrations via the Gradle plugin.
 - **Tests:** Kotest 5.9+ (`FunSpec` or `BehaviorSpec`) or JUnit 5 + Kotlin Test. Testcontainers for Postgres.
 - **Build:** Gradle 8.x with the Kotlin DSL. Ktor plugin for application packaging.
 - **Lint/format:** ktlint (CI-blocking via `ktlintCheck`), detekt for static analysis.
@@ -77,12 +77,12 @@ src/test/kotlin/com/<org>/<app>/
 
 ## Ops
 
-- **Container:** Ktor's `installDist` task plus a small Dockerfile. JDK 21 distroless base, run as non-root.
+- **Container:** Ktor's `installDist` task plus a small Dockerfile. JDK 25 distroless base, run as non-root.
 - **Hosting:** Fly.io, Render, Railway, or a plain VPS. Heroku-style buildpacks also work. For higher scale, ECS Fargate or GKE.
 - **Health:** a `/health` route that pings the DB. `/metrics` exposed via the Ktor Micrometer plugin. Prometheus scrapes it.
 - **Observability:** OpenTelemetry Kotlin SDK with the Ktor `KtorServerTracing` plugin. Logs to stdout JSON, shipped by the platform.
 - **Migrations:** run `flywayMigrate` as a separate CI step before the rolling deploy. Not in `Application.module()`.
-- **CI:** GitHub Actions with `actions/setup-java@v4` and `gradle/actions/setup-gradle@v4` for the build cache. Single matrix entry on JDK 21.
+- **CI:** GitHub Actions with `actions/setup-java@v4` and `gradle/actions/setup-gradle@v4` for the build cache. Single matrix entry on JDK 25.
 
 ## External APIs
 

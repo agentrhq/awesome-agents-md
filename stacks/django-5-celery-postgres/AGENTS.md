@@ -1,9 +1,9 @@
-# AGENTS.md · Django 5.2 LTS · DRF 3.16 · Celery 5.5 · Postgres 16 · pytest 8
+# AGENTS.md · Django 5.2 LTS · DRF 3.17.1 · Celery 5.5 · Postgres 16 · pytest 8
 
 ## Stack
 
 - **Python:** 3.13.x. **uv** for env and deps (`uv.lock` is source of truth). No `pip install` directly.
-- **Framework:** Django 5.2 LTS, Django REST Framework 3.16.
+- **Framework:** Django 5.2 LTS, Django REST Framework 3.17.1.
 - **Background jobs:** Celery 5.5 with Redis 7 broker. `flower` for inspection.
 - **Database:** Postgres 16. Django ORM. No second ORM.
 - **Testing:** pytest 8, pytest-django, factory_boy, responses for HTTP.

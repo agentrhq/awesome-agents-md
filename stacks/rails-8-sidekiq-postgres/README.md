@@ -1,14 +1,14 @@
 ---
 stack_slug: rails-8-sidekiq-postgres
-display_name: Rails 8.0 · Sidekiq 7 · Postgres 16 · RSpec 6 · Kamal 2
-components: [rails-8, sidekiq-7, sidekiq-cron, postgres-16, rspec-6, hotwire, kamal-2, ruby-3.4]
+display_name: Rails 8.1.3 · Sidekiq 8.1.5 · Postgres 16 · RSpec 6 · Kamal 2
+components: [rails-8.1.3, sidekiq-8.1.5, sidekiq-cron, postgres-16, rspec-6, hotwire, kamal-2, ruby-4.0.5]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq
 license: CC0-1.0
 ---
 
-# Rails 8.0 + Sidekiq + Postgres + RSpec + Kamal 2
+# Rails 8.1.3 + Sidekiq + Postgres + RSpec + Kamal 2
 
 The canonical "Rails monolith with background jobs" stack. Hotwire on the frontend, Sidekiq for jobs, RSpec because the community defaults to it even after the Rails team standardized on Minitest. Kamal 2 ships the app to any VPS or Docker host.
 

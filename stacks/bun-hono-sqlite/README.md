@@ -1,7 +1,7 @@
 ---
 stack_slug: bun-hono-sqlite
-display_name: Bun 1.2 · Hono 4.6 · SQLite · Drizzle 0.30 · bun:test
-components: [bun-1.2, hono-4.6, sqlite, drizzle-0.30, bun-test]
+display_name: Bun 1.3.14 · Hono 4.12.23 · SQLite · Drizzle 0.45 · bun:test
+components: [bun-1.3.14, hono-4.12.23, sqlite, drizzle-0.45, bun-test]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq

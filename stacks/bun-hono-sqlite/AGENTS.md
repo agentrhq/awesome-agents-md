@@ -1,18 +1,18 @@
-# AGENTS.md · Bun 1.2 · Hono 4.6 · SQLite (bun:sqlite) · Drizzle 0.30 · bun:test
+# AGENTS.md · Bun 1.3.14 · Hono 4.12.23 · SQLite (bun:sqlite) · Drizzle 0.45 · bun:test
 
 ## Stack
 
-- **Runtime:** Bun 1.2.x. No Node, no `node_modules` resolver fallbacks. `bun --version` is the floor.
-- **Framework:** Hono 4.6+ (single-file routers, edge-compatible). `Bun.serve` mounts the app.
+- **Runtime:** Bun 1.3.14. No Node, no `node_modules` resolver fallbacks. `bun --version` is the floor.
+- **Framework:** Hono 4.12.23 (single-file routers, edge-compatible). `Bun.serve` mounts the app.
 - **Database:** SQLite via **`bun:sqlite`** (built into Bun, synchronous, WAL by default).
-- **ORM:** **Drizzle 0.30+** with the `drizzle-orm/bun-sqlite` driver. Typed queries, schema in TS.
+- **ORM:** **Drizzle 0.45+** with the `drizzle-orm/bun-sqlite` driver. Typed queries, schema in TS.
 - **Migrations:** `drizzle-kit` generate plus `drizzle-kit migrate`. Snapshots committed.
 - **Testing:** `bun:test` (built-in, Jest-compatible). No Jest, no Vitest.
 - **TypeScript:** strict via `tsconfig.json`. `"types": ["bun-types"]` only. No `@types/node`.
 
 ## Run
 
-- Install: `bun install --frozen-lockfile` (uses `bun.lock`, text format on 1.2+)
+- Install: `bun install --frozen-lockfile` (uses `bun.lock`, text format on 1.3+)
 - Dev: `bun --hot src/index.ts` (hot reload on save, port 3000 by default)
 - Prod: `bun src/index.ts`
 - Test (all): `bun test`
