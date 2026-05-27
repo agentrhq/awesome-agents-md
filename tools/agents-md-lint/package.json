@@ -1,0 +1,29 @@
+{
+  "name": "agents-md-lint",
+  "version": "0.1.0",
+  "description": "Lint an AGENTS.md against the awesome-agents-md schema.",
+  "bin": {
+    "agents-md-lint": "bin/agents-md-lint.js"
+  },
+  "files": [
+    "bin"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "CC0-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agentr-labs/awesome-agents-md.git",
+    "directory": "tools/agents-md-lint"
+  },
+  "homepage": "https://github.com/agentr-labs/awesome-agents-md/tree/main/tools/agents-md-lint",
+  "keywords": [
+    "agents-md",
+    "codex",
+    "cursor",
+    "aider",
+    "jules",
+    "lint"
+  ]
+}

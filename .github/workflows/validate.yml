@@ -5,6 +5,7 @@ on:
     paths:
       - 'stacks/**/AGENTS.md'
       - 'stacks/**/README.md'
+      - 'tools/**'
       - '.github/workflows/validate.yml'
   push:
     branches: [main]
@@ -15,30 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate AGENTS.md schema and length cap
-        run: |
-          set -u
-          REQUIRED=("## Stack" "## Run" "## Architecture" "## Conventions" "## Tests" "## External APIs" "## Don't" "## Vendor notes")
-          MAX_LINES=200
-          fail=0
-
-          while IFS= read -r f; do
-            echo "::group::$f"
-            lines=$(wc -l < "$f" | tr -d ' ')
-            if [ "$lines" -gt "$MAX_LINES" ]; then
-              echo "::error file=$f::file is $lines lines, max is $MAX_LINES"
-              fail=1
-            fi
-            for h in "${REQUIRED[@]}"; do
-              if ! grep -qF "$h" "$f"; then
-                echo "::error file=$f::missing required section '$h'"
-                fail=1
-              fi
-            done
-            echo "::endgroup::"
-          done < <(find stacks -type f -name AGENTS.md)
-
-          exit $fail
+      - name: Validate AGENTS.md schema, length, and em-dashes
+        run: node tools/agents-md-lint/bin/agents-md-lint.js stacks/
 
       - name: Validate per-stack README frontmatter
         run: |
@@ -65,7 +44,7 @@ jobs:
 
           exit $fail
 
-      - name: Reject em-dashes in stack content
+      - name: Reject em-dashes in non-AGENTS docs
         run: |
           set -u
           fail=0
@@ -75,5 +54,5 @@ jobs:
               cat /tmp/dashes
               fail=1
             fi
-          done < <(find stacks README.md CONTRIBUTING.md -type f -name '*.md' 2>/dev/null)
+          done < <(find . -type f -name '*.md' ! -name 'AGENTS.md' ! -path './node_modules/*' ! -path './.git/*')
           exit $fail

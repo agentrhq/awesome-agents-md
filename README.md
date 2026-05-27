@@ -37,12 +37,32 @@ A few stacks (Go+chi, SvelteKit+Postgres+Playwright, Astro+Drizzle+Postgres) had
 
 ## Quick start
 
-1. Pick the stack closest to yours from the table above.
-2. Copy the `AGENTS.md` from that folder to your repo root.
-3. Edit the `## Stack` versions to match yours. Skim the other H2s and adjust any conventions you disagree with.
-4. For agents that don't auto-discover AGENTS.md:
-   - **Claude Code:** `ln -s AGENTS.md CLAUDE.md`
-   - **Aider:** `ln -s AGENTS.md CONVENTIONS.md`, or `aider --read AGENTS.md`
+The fastest path is the CLI. From your project root:
+
+```bash
+npx agents-md-pick                       # interactive picker
+npx agents-md-pick nextjs-postgres-prisma  # by slug (substring match)
+```
+
+That copies the matching `AGENTS.md` to your repo root. Then edit the `## Stack` versions to match yours, skim the other H2s, adjust anything you disagree with. For agents that don't auto-discover AGENTS.md:
+
+- **Claude Code:** `ln -s AGENTS.md CLAUDE.md`
+- **Aider:** `ln -s AGENTS.md CONVENTIONS.md`, or `aider --read AGENTS.md`
+
+Prefer to copy by hand? Open the stack folder from the table above and grab `AGENTS.md`.
+
+## Tools
+
+Two zero-dependency Node CLIs ship from this repo:
+
+- [`agents-md-pick`](tools/agents-md-pick) · drop a battle-tested AGENTS.md into your repo (above).
+- [`agents-md-lint`](tools/agents-md-lint) · validate an AGENTS.md against the schema. Same checks as CI, run locally:
+
+  ```bash
+  npx agents-md-lint                 # lint AGENTS.md under cwd
+  npx agents-md-lint AGENTS.md       # one file
+  npx agents-md-lint stacks/         # every AGENTS.md under a directory
+  ```
 
 ## Schema
 
