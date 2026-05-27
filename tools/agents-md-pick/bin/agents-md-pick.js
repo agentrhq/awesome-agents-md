@@ -19,6 +19,9 @@ const STACKS = [
   'sveltekit-drizzle-postgres',
   'astro-drizzle-postgres',
   'dotnet-9-aspnetcore-efcore',
+  'laravel-11-horizon-postgres',
+  'swiftui-swiftdata-xctest',
+  'flutter-riverpod-drift',
 ];
 
 const REMOTE_BASE = 'https://raw.githubusercontent.com/agentr-labs/awesome-agents-md/main/stacks';

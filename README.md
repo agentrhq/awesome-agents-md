@@ -16,7 +16,7 @@ Most teams write their AGENTS.md badly. Generic instructions, no test commands, 
 
 ## Stacks
 
-v1 launch (May 2026). Twelve stacks live. Each entry: drop-in AGENTS.md, frontmatter README, five verification prompts.
+v1 launch (May 2026). Fifteen stacks live. Each entry: drop-in AGENTS.md, frontmatter README, five verification prompts.
 
 | Stack | Path |
 | --- | --- |
@@ -32,8 +32,11 @@ v1 launch (May 2026). Twelve stacks live. Each entry: drop-in AGENTS.md, frontma
 | SvelteKit 2 · Svelte 5 · Drizzle 0.30 · Postgres 16 · Playwright · Vitest 2 | [stacks/sveltekit-drizzle-postgres](stacks/sveltekit-drizzle-postgres) |
 | Astro 4 · Drizzle 0.30 · Postgres 16 · Vitest 2 | [stacks/astro-drizzle-postgres](stacks/astro-drizzle-postgres) |
 | .NET 9 · ASP.NET Core 9 · EF Core 9 · Postgres 16 · xUnit · Testcontainers | [stacks/dotnet-9-aspnetcore-efcore](stacks/dotnet-9-aspnetcore-efcore) |
+| Laravel 11 · Horizon · Postgres 16 · Pest 3 | [stacks/laravel-11-horizon-postgres](stacks/laravel-11-horizon-postgres) |
+| SwiftUI · SwiftData · XCTest (Swift 5.10+ / 6) | [stacks/swiftui-swiftdata-xctest](stacks/swiftui-swiftdata-xctest) |
+| Flutter 3.24+ · Riverpod 2 · Drift · go_router | [stacks/flutter-riverpod-drift](stacks/flutter-riverpod-drift) |
 
-A few stacks (Go+chi, SvelteKit+Postgres+Playwright, Astro+Drizzle+Postgres) had no 500+ star AGENTS.md in the wild as of May 2026. Those entries lean on framework-side conventions and reference repos under the star threshold; their `README.md` flags the gap and invites PRs from teams running the stack at scale.
+A few stacks (Go+chi, SvelteKit+Postgres+Playwright, Astro+Drizzle+Postgres, Laravel, Flutter) had no 500+ star AGENTS.md in the wild as of May 2026. Those entries lean on framework-side conventions and reference repos under the star threshold; their `README.md` flags the gap and invites PRs from teams running the stack at scale.
 
 ## Quick start
 
