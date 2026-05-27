@@ -35,11 +35,12 @@ license: CC0-1.0
 3. `## Architecture`
 4. `## Conventions`
 5. `## Tests`
-6. `## External APIs`
-7. `## Don't`
-8. `## Vendor notes`
+6. `## Ops`
+7. `## External APIs`
+8. `## Don't`
+9. `## Vendor notes`
 
-CI enforces all eight. Files cap at 200 lines. Longer files [hurt agent performance](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/), so keep it short.
+CI enforces all nine. Files cap at 200 lines. Longer files [hurt agent performance](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/), so keep it short.
 
 ## Verification
 

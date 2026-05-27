@@ -1,13 +1,13 @@
-# AGENTS.md · Rust 1.80 · Axum 0.7 · sqlx 0.8 · Postgres 16 · tokio 1
+# AGENTS.md · Rust 1.85 · Axum 0.8 · sqlx 0.8 · Postgres 16 · tokio 1
 
 ## Stack
 
-- **Toolchain:** Rust 1.80+ stable via `rustup`. `rust-toolchain.toml` pins the project.
-- **Framework:** Axum 0.7 (tower-based, typed extractors, `IntoResponse` trait).
+- **Toolchain:** Rust 1.85+ stable via `rustup`. `rust-toolchain.toml` pins the project.
+- **Framework:** Axum 0.8 (tower-based, typed extractors, `IntoResponse` trait). Route syntax uses `{param}` placeholders, not `:param`.
 - **Async runtime:** tokio 1.x with `rt-multi-thread`, `macros`, `signal`.
 - **Database:** Postgres 16 via **sqlx 0.8** with features `postgres`, `runtime-tokio-rustls`, `macros`, `migrate`, `chrono`, `uuid`.
 - **Errors:** thiserror 1 for typed error enums. Anyhow only at the binary boundary.
-- **Logging:** tracing + tracing-subscriber with `EnvFilter`. Never `println!` in library code.
+- **Logging:** `tracing` + `tracing-subscriber` with `EnvFilter`. JSON layer in prod, pretty in dev.
 - **Migrations:** sqlx-cli (`cargo install sqlx-cli --no-default-features --features postgres,rustls`).
 
 ## Run
@@ -25,7 +25,7 @@ DB:
 - New migration: `sqlx migrate add -r <slug>` (creates `migrations/<ts>_<slug>.up.sql` and `.down.sql`)
 - Apply: `sqlx migrate run`
 - Revert: `sqlx migrate revert`
-- **Before committing schema changes:** `cargo sqlx prepare -- --all-targets`. This refreshes `.sqlx/` so CI can build offline with `SQLX_OFFLINE=true`.
+- **Before committing schema changes:** `cargo sqlx prepare --workspace -- --all-targets`. This refreshes `.sqlx/` so CI can build offline with `SQLX_OFFLINE=true`. Without it CI cannot compile `query!`/`query_as!` macros.
 
 Expected runtimes: clean `cargo build` ≤90s, incremental ≤3s, `cargo test` ≤30s on a hot test DB. Anything 3× over is a real regression.
 
@@ -37,7 +37,7 @@ src/
 ├── lib.rs               # Re-exports for integration tests under `tests/`.
 ├── api/
 │   ├── mod.rs           # Router::new().merge(users::router()) ...
-│   ├── users.rs         # Axum handlers. Thin. Call service layer.
+│   ├── users.rs         # Axum handlers. Thin. Call service layer. Routes use {id}.
 │   ├── error.rs         # AppError enum + IntoResponse impl. Maps to HTTP status.
 │   └── extractors.rs    # Custom FromRequestParts (AuthUser, etc.)
 ├── db/
@@ -59,6 +59,7 @@ Keep the **handler → service → db** split clean. Handlers parse, services de
 - **Style:** `rustfmt` default config. `clippy::pedantic` selectively, `-D warnings` blocks CI.
 - **Error type:** crate-level `AppError` enum via `thiserror`. Each variant maps to an HTTP status via `impl IntoResponse for AppError`. `#[from]` for ergonomic conversions.
 - **sqlx queries:** prefer `query!` / `query_as!` macros for compile-time checking against `.sqlx/`. Use `query_as` (runtime) only when the schema is dynamic.
+- **Axum 0.8 routes:** path params use `{name}` (e.g. `/users/{id}`). The old `:id` syntax is gone. Trailing-slash redirects also changed; pick one canonical form.
 - **Async:** every handler is `async fn`. No `block_on` in request paths. CPU-bound work goes through `tokio::task::spawn_blocking`.
 - **Logging:** `#[tracing::instrument(skip(pool))]` on handlers and service functions. Never log secrets, never log full bodies.
 - **State:** `Arc<AppState>` passed via `State<Arc<AppState>>`. One pool per process.
@@ -67,22 +68,29 @@ Keep the **handler → service → db** split clean. Handlers parse, services de
 ## Tests
 
 - **Where:** unit tests in `#[cfg(test)] mod tests {}` blocks next to the code. Integration tests under `tests/` use `lib.rs` re-exports.
-- **DB:** real Postgres via `sqlx::test` (auto-creates a fresh DB per test, rolls back via drop). Set `DATABASE_URL` to a template DB in CI. **Never mock sqlx.**
+- **DB:** real Postgres via `sqlx::test` (auto-creates a fresh DB per test, rolls back via drop). Set `DATABASE_URL` to a template DB in CI. Never mock sqlx.
 - **HTTP:** call `app.oneshot(Request::builder()...)` from `tower::ServiceExt`. No live server, no `reqwest`.
 - **Fixtures:** `tests/fixtures/<name>.sql`. Reference with `#[sqlx::test(fixtures("users"))]`.
 - **External HTTP:** mock via `wiremock` crate. Spin up a fake server per test, point the client at it.
 - **Time:** inject a `Clock` trait (`SystemClock` in prod, `MockClock` in tests). Don't reach for global time mocking.
 - **Async assertions:** `assert_eq!` is fine; for futures, `tokio::time::timeout` to fail loudly.
 
+## Ops
+
+- **Container:** multi-stage Dockerfile. Use `Swatinem/rust-cache@v2` for the builder layer, copy the slim binary into `gcr.io/distroless/cc-debian12`.
+- **Deploy:** Fly.io or Railway both work cleanly with a static binary. `axum::serve` with `tokio::signal::ctrl_c` for graceful shutdown.
+- **Health:** add a `GET /health` route returning `StatusCode::OK` (liveness) and `GET /ready` that runs `sqlx::query("SELECT 1").execute(&pool).await`.
+- **Tracing:** `tracing-subscriber::registry().with(EnvFilter).with(JsonLayer)`. Pair with `opentelemetry-otlp` and `tracing-opentelemetry` to export spans to an OTLP collector.
+- **CI:** GitHub Actions with `actions-rust-lang/setup-rust-toolchain`, `Swatinem/rust-cache@v2` for the target dir, `SQLX_OFFLINE=true` so the build does not need a live DB. Run `cargo fmt --check`, `cargo clippy -- -D warnings`, `cargo test`.
+- **Migrations:** run `sqlx migrate run` as a separate step before booting the app binary. Do not call it from `main.rs` at startup. Multi-instance startup races on the `_sqlx_migrations` table.
+- **Offline builds:** every PR that touches SQL must include the regenerated `.sqlx/` directory or CI's `cargo build --release` fails.
+
 ## External APIs
 
-Three patterns for auth-bound third-party APIs (Stripe, SendGrid, GitHub, AWS, and similar):
-
-1. **`std::env` + a typed config struct.** Load via `config` or `envy` crate, validate at startup, panic on missing required keys. Stdlib-ish.
-2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; app code unchanged.
-3. **Authsome.** Declare providers (e.g. `authsome::stripe`); credentials live in `~/.authsome/`, never in env. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
-
-Pick one. The compiler can't catch a key that exists in dev but not in prod; centralize it.
+- **Native pattern:** a typed `Config` struct in `config.rs`. Load via `figment` (env + file layering) or `envy` (env-only) with `serde::Deserialize`. Validate at startup; missing keys abort before `axum::serve` binds.
+- For teams with rotation policies, layer a secret manager (Doppler, Vault, AWS Secrets Manager) underneath. It injects env vars and the same `Config` deserializer reads them.
+- The compiler cannot catch a key that exists in dev but not in prod. Centralize loading in one place.
+- Authsome is an alternative when credentials need to rotate without redeploys. See [authsome.dev](https://authsome.dev).
 
 ## Don't
 
@@ -92,7 +100,7 @@ Pick one. The compiler can't catch a key that exists in dev but not in prod; cen
 - Don't hold a `PgConnection` across an `.await` of unrelated work. Use the pool and let sqlx hand back the conn.
 - Don't paginate with `OFFSET` past a few thousand rows. Use keyset (`WHERE id > $1 ORDER BY id LIMIT 20`).
 - Don't put `?Send` futures behind `tokio::spawn`. The compiler will complain; the fix is to restructure, not to add `Arc<Mutex<_>>`.
-- Don't commit `.sqlx/` changes without running `cargo sqlx prepare` against the actual schema. CI will fail with `SQLX_OFFLINE=true`.
+- Don't commit changes to SQL macros without running `cargo sqlx prepare`. CI will fail with `SQLX_OFFLINE=true`.
 
 ## Vendor notes
 

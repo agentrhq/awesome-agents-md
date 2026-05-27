@@ -1,33 +1,34 @@
 ---
 stack_slug: astro-drizzle-postgres
-display_name: Astro 4 · Drizzle 0.30 · Postgres 16 · Vitest 2
-components: [astro-4, drizzle-0.30, postgres-16, vitest-2]
+display_name: Astro 5 · Drizzle 0.36 · Turso (libSQL) · Vitest 2
+components: [astro-5, drizzle-0.36, turso-libsql, vitest-2]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq
 license: CC0-1.0
 ---
 
-# Astro 4 + Drizzle + Postgres + Vitest
+# Astro 5 + Drizzle + Turso + Vitest
 
-A content-heavy Astro site with selective SSR and a typed Drizzle boundary to Postgres. Static by default, hydrated only where the user actually needs it.
+A content-heavy Astro site with selective SSR and a typed Drizzle boundary to Turso (libSQL). Static by default, hydrated only where the user actually needs it, replicated to the edge for read-mostly traffic. (The directory keeps its original `astro-drizzle-postgres` slug for stable URLs; the stack itself now targets Turso.)
 
 ## Why these choices
 
-- **Astro 4 hybrid output.** Static prerender for most pages, opt-in SSR per route. The minimum-JS default is the whole point.
-- **Drizzle over Prisma.** Thin SQL-shaped query builder, no separate engine binary, codegen is just types. Plays well with edge-leaning Astro adapters.
-- **`@astrojs/node` adapter.** Boring, reliable, no vendor lock-in. Swap for Cloudflare or Vercel if you outgrow it.
+- **Astro 5 with per-route prerender.** Static prerender for most pages, opt-in SSR per route. The minimum-JS default is the whole point.
+- **Turso (libSQL) over Postgres.** Astro deployments tend to live on edge runtimes (Cloudflare, Vercel Edge) where a TCP Postgres pool is painful. Turso speaks SQLite over HTTPS and replicates near your users.
+- **Drizzle 0.36 over Prisma.** Thin SQL-shaped query builder, no separate engine binary, codegen is just types. The libSQL driver is first-party in Drizzle.
 - **Vitest over Jest.** Native ESM, faster, Astro's documented testing stack.
-- **pnpm over npm/yarn.** Speed and strict dep isolation.
+- **pnpm 10 over npm/yarn.** Speed and strict dep isolation.
 
 ## What to tune
 
-- Drop `src/content/` if you're not using content collections. It's optional in Astro 4.
-- Swap `postgres-js` for `pg` if you need a long-lived pool with end-to-end TLS verification quirks.
-- If every route is static, you can remove the Node adapter entirely and ship to a static host.
+- Drop `src/content/` if you're not using content collections.
+- Swap Cloudflare for Vercel (or vice versa) by switching adapters; the Drizzle + libSQL layer is portable.
+- If every route is static and the DB is read-only at build time, you can skip the adapter entirely and ship to a static host.
+- For long-form analytical queries the Postgres branch still makes sense; swap `@libsql/client` for `postgres-js` and update `drizzle-orm/libsql` → `drizzle-orm/postgres-js`.
 
 ## Verification
 
-Astro + Drizzle + Postgres is unusual. Most Astro sites I've seen use SQLite + Turso or skip the DB layer. Send a PR if you run this combination.
+Verified against the structure of `withstudiocms/studiocms` (Astro + libSQL/Turso) and `XingHe501/gemini-gems` (Astro + Drizzle + Turso), both of which ship a real AGENTS.md.
 
 `verified_with` is empty until someone runs the stock prompt through Codex, Cursor, Jules, and Aider and attaches the logs. See [CONTRIBUTING.md](../../CONTRIBUTING.md#verification).

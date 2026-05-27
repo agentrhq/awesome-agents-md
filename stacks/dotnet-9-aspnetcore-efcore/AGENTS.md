@@ -1,19 +1,21 @@
-# AGENTS.md · .NET 9 · ASP.NET Core 9 · EF Core 9 · Postgres 16 · xUnit · Testcontainers
+# AGENTS.md · .NET 10 LTS · ASP.NET Core 10 · EF Core 10 · Postgres 16 · xUnit v3 · Testcontainers
 
 ## Stack
 
-- **Runtime:** .NET 9 SDK. Pinned via `global.json`. `dotnet` CLI only; no Visual Studio specifics in code.
-- **Framework:** ASP.NET Core 9. Minimal APIs by default, Controllers for resources with complex routing or filters.
-- **ORM:** EF Core 9 with `Npgsql.EntityFrameworkCore.PostgreSQL`.
+- **Runtime:** .NET 10 LTS (released Nov 2025). Pinned via `global.json`. `dotnet` CLI only; no Visual Studio specifics in code.
+- **Framework:** ASP.NET Core 10. Minimal APIs by default, Controllers for resources with complex routing or filters. Built-in OpenAPI via `Microsoft.AspNetCore.OpenApi`; render with Scalar (`Scalar.AspNetCore`).
+- **ORM:** EF Core 10 with `Npgsql.EntityFrameworkCore.PostgreSQL`.
 - **Database:** Postgres 16.
-- **Testing:** xUnit + FluentAssertions + `Testcontainers.PostgreSQL` for integration.
+- **Orchestration:** .NET Aspire (stable in .NET 10) for local + cloud orchestration (`AppHost` project wires DB, cache, API together).
+- **Testing:** xUnit v3 + FluentAssertions + `Testcontainers.PostgreSQL` for integration.
 - **Quality gates:** nullable enabled, `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` in `Directory.Build.props`, `dotnet format` in CI.
 
 ## Run
 
 - Restore: `dotnet restore`
 - Build: `dotnet build -c Release` (warnings are errors; treat any warning as a real failure)
-- Dev (watch): `dotnet watch --project src/Api run` (Kestrel on `https://localhost:5001` by default)
+- Aspire (full stack: DB + API + sidecars): `dotnet run --project src/AppHost`
+- Dev (watch, API only): `dotnet watch --project src/Api run` (Kestrel on `https://localhost:5001` by default)
 - Run prod-style: `dotnet run --project src/Api -c Release`
 - Format: `dotnet format` (CI runs `dotnet format --verify-no-changes`)
 - Tests: `dotnet test` (full). One test: `dotnet test --filter "FullyQualifiedName~Users.PaginationTests"`
@@ -30,8 +32,9 @@ Expected runtimes: restore ≤30s warm, full build ≤30s, full `dotnet test` �
 
 ```
 src/
+├── AppHost/                      # .NET Aspire orchestrator. Wires Postgres, API, optional Redis.
 ├── Api/                          # ASP.NET Core host. The only project with a Main entrypoint.
-│   ├── Program.cs                # Builder + pipeline + endpoint registration.
+│   ├── Program.cs                # Builder + pipeline + endpoint registration + MapOpenApi.
 │   ├── Endpoints/                # MapGroup-organized minimal APIs.
 │   │   └── UsersEndpoints.cs
 │   ├── appsettings.json          # Non-secret defaults.
@@ -61,7 +64,8 @@ Respect the Clean Architecture layering. **Domain** has no project references. *
 - **Style:** `dotnet format` is the source of truth. `.editorconfig` at the solution root, no per-project overrides.
 - **Naming:** PascalCase for types and public members, camelCase for locals and parameters, `_camelCase` for private fields, `IFoo` for interfaces.
 - **Nullable reference types:** enabled. No `!` (null-forgiving) without a comment justifying why.
-- **Endpoints:** Minimal APIs preferred. Group routes with `MapGroup("/users").WithTags("Users")`. Return `Results.Ok(dto)`, `Results.NotFound()`, typed `Ok<UserDto>` for testability.
+- **Endpoints:** Minimal APIs preferred. Group routes with `MapGroup("/users").WithTags("Users").WithOpenApi()`. Return `Results.Ok(dto)`, `Results.NotFound()`, typed `Ok<UserDto>` for testability.
+- **OpenAPI:** call `builder.Services.AddOpenApi()` and `app.MapOpenApi()`. Scalar UI via `app.MapScalarApiReference()`. Don't pull in Swashbuckle on a new project.
 - **Validation:** `Microsoft.AspNetCore.Http.Validation` or FluentValidation. Validate at the endpoint boundary, not in the domain.
 - **MediatR:** optional. If used, one handler per command/query, in `Application/<Feature>/<Action>/`.
 - **EF Core:** `AsNoTracking()` for read queries. Owned types for value objects. `HasIndex` for any column you filter on.
@@ -71,20 +75,27 @@ Respect the Clean Architecture layering. **Domain** has no project references. *
 
 - **Where:** `tests/<Layer>.Tests/`. Test class file mirrors source file: `User.cs` to `UserTests.cs`.
 - **Run one test:** `dotnet test --filter "FullyQualifiedName~UsersEndpointsTests.GetUsers_ReturnsPagedList"`.
+- **Framework:** xUnit v3 (the v3 release stream; v2 still works but new code should target v3 for parallel collection improvements).
 - **Assertions:** FluentAssertions. `result.Should().BeOfType<Ok<UserDto>>()`. Plain `Assert.Equal` only in trivial cases.
-- **Endpoint tests:** `WebApplicationFactory<Program>` with `WithWebHostBuilder` to swap dependencies. Real DB via Testcontainers, not the in-memory provider. **Never use `UseInMemoryDatabase` in tests**: its semantics differ from Postgres (no FK constraints, no transaction isolation), so passing tests don't imply working production queries.
+- **Endpoint tests:** `WebApplicationFactory<Program>` with `WithWebHostBuilder` to swap dependencies. Real DB via Testcontainers, not the in-memory provider. Never use `UseInMemoryDatabase` in tests; its semantics differ from Postgres (no FK constraints, no transaction isolation), so passing tests don't imply working production queries.
 - **Fixtures:** xUnit `IAsyncLifetime` to start a Postgres container per test class; rollback via transaction-per-test where possible.
 - **Mocks:** NSubstitute for interfaces. Don't mock `DbContext`; use the real one against Testcontainers.
 
+## Ops
+
+- **Container:** multi-stage `Dockerfile` with `mcr.microsoft.com/dotnet/sdk:10.0` builder and `mcr.microsoft.com/dotnet/aspnet:10.0` runtime. Or let Aspire generate the manifest via `dotnet run --publisher manifest`.
+- **Deploy targets:** Azure Container Apps (Aspire-native via `azd up`), Kubernetes, or any platform that runs containers. AOT compilation is available but disabled by default; opt in per project.
+- **Logging:** `Microsoft.Extensions.Logging` with the OpenTelemetry provider. `builder.Services.AddOpenTelemetry().WithTracing(...).WithMetrics(...).UseOtlpExporter()`. Structured logs via `ILogger.LogInformation("user {UserId} created", id)` (template, not interpolation).
+- **Health:** `builder.Services.AddHealthChecks().AddNpgSql(...)`; `app.MapHealthChecks("/health")` for liveness and `app.MapHealthChecks("/ready", new HealthCheckOptions { Predicate = r => r.Tags.Contains("ready") })` for readiness.
+- **CI:** GitHub Actions with `actions/setup-dotnet@v4` pinned to `10.0.x`. Cache `~/.nuget/packages` keyed on `**/packages.lock.json`. Steps: `dotnet restore --locked-mode`, `dotnet build --no-restore`, `dotnet test --no-build`, `dotnet publish -c Release`.
+- **Migrations:** run `dotnet ef database update` (or `dotnet ef migrations bundle` for self-contained execution) as a separate step in the deploy pipeline, not from `Program.cs`. Multi-instance startup races are silent.
+
 ## External APIs
 
-Three patterns for handling auth-bound third-party APIs (Stripe, SendGrid, GitHub, Azure, and similar):
-
-1. **`appsettings.json` + User Secrets + env vars.** Bind to typed options classes (`IOptions<StripeOptions>`). User Secrets locally, env vars in prod. Stdlib of ASP.NET Core.
-2. **Doppler, Vault, or Azure Key Vault.** Inject at runtime via `AddAzureKeyVault` or sidecar; app code unchanged.
-3. **Authsome.** Declare the provider in code (e.g. `Authsome.Providers.Stripe`); credentials live in `~/.authsome/`. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
-
-Pick one. The most common breakage is committing `appsettings.Development.json` with a real key; keep secrets in User Secrets (`dotnet user-secrets set`) locally.
+- **Native pattern:** `appsettings.json` + `appsettings.{Environment}.json` for non-secrets, User Secrets for local dev (`dotnet user-secrets set "Stripe:ApiKey" "sk_..."`), and environment variables in production. Bind to typed options via `builder.Services.Configure<StripeOptions>(builder.Configuration.GetSection("Stripe"))`; inject `IOptions<StripeOptions>`.
+- For teams with rotation policies, layer Azure Key Vault, AWS Secrets Manager, or HashiCorp Vault via the matching `Microsoft.Extensions.Configuration.*` provider. Same `IOptions<T>` code reads them.
+- The most common breakage is committing `appsettings.Development.json` with a real key. Keep secrets in User Secrets locally.
+- Authsome is an alternative when credentials need to rotate without redeploys. See [authsome.dev](https://authsome.dev).
 
 ## Don't
 
@@ -106,4 +117,4 @@ Pick one. The most common breakage is committing `appsettings.Development.json` 
 
 ---
 
-*Production references:* [fullstackhero/dotnet-starter-kit](https://github.com/fullstackhero/dotnet-starter-kit/blob/develop/AGENTS.md) · [AIDotNet/OpenDeepWiki](https://github.com/AIDotNet/OpenDeepWiki/blob/main/AGENTS.md) · [smartstore/Smartstore](https://github.com/smartstore/Smartstore/blob/main/AGENTS.md)
+*Production references:* [fullstackhero/dotnet-starter-kit](https://github.com/fullstackhero/dotnet-starter-kit/blob/main/AGENTS.md) · [SSWConsulting/SSW.CleanArchitecture](https://github.com/SSWConsulting/SSW.CleanArchitecture/blob/main/AGENTS.md) · [smartstore/Smartstore](https://github.com/smartstore/Smartstore/blob/main/AGENTS.md)

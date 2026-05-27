@@ -1,9 +1,9 @@
-# AGENTS.md · Bun 1.1 · Hono 4 · SQLite (bun:sqlite) · Drizzle 0.30 · bun:test
+# AGENTS.md · Bun 1.2 · Hono 4.6 · SQLite (bun:sqlite) · Drizzle 0.30 · bun:test
 
 ## Stack
 
-- **Runtime:** Bun 1.1+. No Node, no `node_modules` resolver fallbacks. `bun --version` is the floor.
-- **Framework:** Hono 4 (single-file routers, edge-compatible). `Bun.serve` mounts the app.
+- **Runtime:** Bun 1.2.x. No Node, no `node_modules` resolver fallbacks. `bun --version` is the floor.
+- **Framework:** Hono 4.6+ (single-file routers, edge-compatible). `Bun.serve` mounts the app.
 - **Database:** SQLite via **`bun:sqlite`** (built into Bun, synchronous, WAL by default).
 - **ORM:** **Drizzle 0.30+** with the `drizzle-orm/bun-sqlite` driver. Typed queries, schema in TS.
 - **Migrations:** `drizzle-kit` generate plus `drizzle-kit migrate`. Snapshots committed.
@@ -12,7 +12,7 @@
 
 ## Run
 
-- Install: `bun install --frozen-lockfile` (uses `bun.lockb`)
+- Install: `bun install --frozen-lockfile` (uses `bun.lock`, text format on 1.2+)
 - Dev: `bun --hot src/index.ts` (hot reload on save, port 3000 by default)
 - Prod: `bun src/index.ts`
 - Test (all): `bun test`
@@ -33,6 +33,7 @@ Expected runtimes: `bun install` ≤5s warm, cold start ≤200ms, full `bun test
 ```
 src/
 ├── index.ts             # Hono app composition + Bun.serve(). One file, terse.
+├── env.ts               # Zod schema, parsed once at boot. Exports typed `env`.
 ├── routes/              # One Router per resource.
 │   ├── users.ts         # export const users = new Hono().get(...).post(...)
 │   └── posts.ts
@@ -74,15 +75,22 @@ Hono is composed, not configured. `src/index.ts` chains `.route("/users", users)
 - **External HTTP:** mock at the boundary. Bun's `fetch` is spy-able; for richer matchers use `msw` (works in Bun).
 - **Redirects:** wrap `app.request` to follow redirects in tests (`appRequestWithRedirect`). The default does not follow.
 
+## Ops
+
+- **Deploy targets:** Cloudflare Workers + D1 for edge, or Fly.io/Railway with a mounted volume for self-hosted SQLite.
+- **Production SQLite:** WAL is on by default (`bun:sqlite` sets `journal_mode=WAL`). SQLite is single-writer. Concurrent readers are fine, concurrent writers serialize at the file lock. If you need write throughput beyond ~1k/s sustained, switch to Postgres.
+- **Backups:** run `Litestream` as a sidecar process replicating the SQLite file to S3-compatible storage. Set `litestream replicate` in a sidecar container; restore on boot with `litestream restore` before `bun src/index.ts`.
+- **Volume:** the SQLite file lives on a mounted volume (`/data/app.db`). Never under `/tmp` or the container layer.
+- **Logging:** Bun has a built-in console + structured `console.log({...})` is fine; pipe stdout to your platform's log collector.
+- **Health:** add a `GET /health` route that runs `db.query("SELECT 1").get()` to confirm the file is reachable.
+- **CI:** GitHub Actions with `oven-sh/setup-bun@v2`, `bun install --frozen-lockfile`, `bun test`, `bun run typecheck`.
+
 ## External APIs
 
-Three patterns for auth-bound third-party APIs (Stripe, Resend, GitHub, Postmark, and similar):
-
-1. **`Bun.env` + a typed schema.** Validate with Zod or `valibot` at boot. Crash on missing keys. Native to Bun, zero deps.
-2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; app code unchanged. Adds an external dep to local dev.
-3. **Authsome.** Declare providers in code (e.g. `@authsome/stripe`); credentials live in `~/.authsome/`, never in env. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
-
-Pick one. Mixing two means two source-of-truth files for the same secret.
+- **Native pattern:** `src/env.ts` defines a Zod schema for every variable the app reads. Parse `Bun.env` once at import time. On parse failure, the process exits before `Bun.serve` binds. Routes import the typed `env` object, not `Bun.env` directly.
+- For teams with rotation policies, layer a secret manager (Doppler, Vault, Infisical) underneath. It injects env vars and the Zod schema still validates them, no app changes.
+- Mixing two sources means two source-of-truth files for the same secret. Pick one resolver.
+- Authsome is an alternative when credentials need to rotate without redeploys. See [authsome.dev](https://authsome.dev).
 
 ## Don't
 
@@ -104,4 +112,4 @@ Pick one. Mixing two means two source-of-truth files for the same secret.
 
 ---
 
-*Production references:* [openRin/Rin](https://github.com/openRin/Rin/blob/main/AGENTS.md) · [open-pencil/open-pencil](https://github.com/open-pencil/open-pencil/blob/master/AGENTS.md) · [FreiFahren/FreiFahren](https://github.com/FreiFahren/FreiFahren/blob/main/AGENTS.md)
+*Production references:* [FreiFahren/FreiFahren](https://github.com/FreiFahren/FreiFahren/blob/main/AGENTS.md) · [openRin/Rin](https://github.com/openRin/Rin/blob/main/AGENTS.md) · [open-pencil/open-pencil](https://github.com/open-pencil/open-pencil/blob/master/AGENTS.md)

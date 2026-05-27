@@ -1,11 +1,11 @@
-# AGENTS.md · FastAPI 0.115 · Celery 5 · Postgres 16 · pytest 8
+# AGENTS.md · FastAPI 0.118 · Celery 5.5 · Postgres 16 · pytest 8
 
 ## Stack
 
-- **Python:** 3.12.x. **uv** for env and deps (`uv.lock` is source of truth). No `pip install` directly.
-- **Framework:** FastAPI 0.115+ (Pydantic v2, async-first).
+- **Python:** 3.13.x. **uv** for env and deps (`uv.lock` is source of truth). No `pip install` directly.
+- **Framework:** FastAPI 0.118+ (Pydantic v2, async-first).
 - **ORM:** SQLAlchemy 2.0 (async session via asyncpg) + Alembic for migrations.
-- **Background jobs:** Celery 5 with Redis 7 broker. `flower` for inspection.
+- **Background jobs:** Celery 5.5 with Redis 7 broker. `flower` for inspection.
 - **Testing:** pytest 8, pytest-asyncio, httpx ASGITransport, factory_boy.
 - **Typing:** strict mypy on `src/`, ruff for lint and format (replaces black + isort + flake8).
 
@@ -61,7 +61,7 @@ Keep the `api/` ↔ `services/` ↔ `models/` split clean. Routes never touch OR
 - **Style:** ruff with `select = ["E", "F", "I", "B", "UP", "S", "C4", "PIE", "RET"]`, line length 100.
 - **Naming:** snake_case for modules and functions, PascalCase for classes. Pydantic models suffix purpose (`UserCreate`, `UserRead`).
 - **Async everywhere in the API path.** Don't mix sync sessions into async endpoints.
-- **Pydantic v2:** use `model_config = ConfigDict(from_attributes=True)` for ORM→DTO. Never `class Config`.
+- **Pydantic v2:** use `model_config = ConfigDict(from_attributes=True)` for ORM to DTO. Never `class Config`.
 - **Imports:** absolute (`from src.app.X import Y`). No relative imports.
 - **HTTP exceptions:** raise `HTTPException` only in the API layer. Services raise domain exceptions (`UserNotFoundError`); the API layer translates.
 - **Celery tasks:** `@shared_task(bind=True, autoretry_for=(IOError,), retry_backoff=True, max_retries=5)`. Always idempotent.
@@ -69,21 +69,28 @@ Keep the `api/` ↔ `services/` ↔ `models/` split clean. Routes never touch OR
 ## Tests
 
 - **Where:** mirror `src/app/foo/bar.py` with `tests/foo/test_bar.py`.
-- **DB:** real Postgres via Testcontainers in `tests/conftest.py`. Each test wraps in a transaction that rolls back. **Never mock SQLAlchemy.** Broken queries pass against mocks.
+- **DB:** real Postgres via Testcontainers in `tests/conftest.py`. Each test wraps in a transaction that rolls back. Never mock SQLAlchemy. Broken queries pass against mocks.
 - **Async client:** `AsyncClient(transport=ASGITransport(app=app), base_url="http://test")`. No live server.
 - **Celery:** unit tests call `task.apply()` (synchronous, in-process). Integration tests use `celery_worker` from `pytest-celery`.
 - **Mocks:** external HTTP via `respx` (httpx-aware). Time via `freezegun`. Random via fixed seed.
-- **Markers:** `@pytest.mark.slow` for tests >2s. Default run excludes them: `pytest -m "not slow"`.
+- **Markers:** `@pytest.mark.slow` for tests over 2s. Default run excludes them: `pytest -m "not slow"`.
+
+## Ops
+
+- **Observability:** structlog for JSON logs; `opentelemetry-instrumentation-fastapi` + `opentelemetry-instrumentation-celery` for distributed tracing. Sentry SDK with both integrations enabled. Prometheus metrics via `prometheus-fastapi-instrumentator`.
+- **CI:** GitHub Actions. One job per concern: `uv sync --frozen`, `ruff check`, `mypy src/`, `pytest`. Cache `~/.cache/uv` keyed on `uv.lock`. Postgres + Redis as service containers.
+- **Deploy:** Docker image built with a multi-stage Dockerfile (uv in builder, slim runtime). Fly.io or Render for managed; ECS Fargate or a Kubernetes Deployment for cloud. Alembic upgrade runs as a separate release step before the web/worker containers start; never inside `main.py` startup.
+- **Health:** `/healthz` returns 200 with a `SELECT 1` against the async session pool. `/readyz` also pings Redis and reports Celery worker presence via `inspect.ping()`. Both are mounted in `main.py`, not behind auth.
 
 ## External APIs
 
-Three patterns for auth-bound third-party APIs (Stripe, OpenAI, SendGrid, AWS, and similar):
+Auth-bound third-party APIs (Stripe, OpenAI, SendGrid, AWS, etc.) live here.
 
-1. **Pydantic Settings + .env.** Load from `os.environ`, validate at startup. Stdlib of FastAPI.
-2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; app code unchanged.
-3. **Authsome.** Import providers (e.g. `from authsome.providers import openai`); credentials in `~/.authsome/`, never in code or env. Cross-language, so the Celery worker and the FastAPI app share auth. See [authsome.dev](https://authsome.dev).
+Primary pattern: Pydantic Settings in `src/app/settings.py` reads `os.environ` and validates types at startup. Domain-scoped subclasses (`AuthConfig`, `BillingConfig`) keep secrets close to the code that uses them. Missing or malformed vars crash boot, not first request.
 
-Pick one. The most common source of "works in dev, not in worker" is the worker reading a different env source than the API.
+For larger teams with rotation policies: secret managers like Doppler, AWS Secrets Manager, or HashiCorp Vault inject env vars at boot. App code stays the same.
+
+See also: [Authsome](https://authsome.dev) ships a cross-language credential layer if your stack is polyglot.
 
 ## Don't
 

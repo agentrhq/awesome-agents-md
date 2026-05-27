@@ -1,7 +1,7 @@
 ---
 stack_slug: phoenix-ecto-postgres
-display_name: Elixir 1.17 · Phoenix 1.7 · Ecto 3 · Postgres 16 · Oban · ExUnit
-components: [elixir-1.17, otp-27, phoenix-1.7, ecto-3, postgres-16, oban, exunit]
+display_name: Elixir 1.18 · Phoenix 1.7 · Ecto 3 · Postgres 16 · Oban · ExUnit
+components: [elixir-1.18, otp-27, phoenix-1.7, ecto-3, postgres-16, oban, exunit]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq

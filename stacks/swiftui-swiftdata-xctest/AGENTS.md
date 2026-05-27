@@ -1,21 +1,21 @@
-# AGENTS.md · SwiftUI · SwiftData · XCTest (Swift 5.10+ / 6)
+# AGENTS.md · SwiftUI · SwiftData · Swift Testing (Swift 6 · iOS 18+)
 
 ## Stack
 
-- **Swift:** 5.10 minimum, Swift 6 mode where the target supports it (strict concurrency on).
-- **Platforms:** iOS 17 / macOS 14 minimum (SwiftData baseline; older targets need Core Data).
+- **Swift:** 6.0 stable, strict concurrency on (`-strict-concurrency=complete`).
+- **Platforms:** iOS 18 / iPadOS 18 / macOS 15 minimum. Older deployment targets stay on Core Data and `ObservableObject`.
 - **UI:** SwiftUI. UIKit/AppKit only for what SwiftUI still cannot do (e.g. `UIViewRepresentable` shims).
 - **Persistence:** SwiftData (`@Model`, `ModelContainer`, `ModelContext`). Migrate from Core Data via `VersionedSchema` if applicable.
-- **Testing:** XCTest is the baseline. On Swift 6, the new Testing framework (`@Test`, `#expect`) is preferred for new files; XCTest stays for UI tests until `XCUITest` is replaced.
+- **Testing:** Swift Testing (`import Testing`, `@Test`, `#expect`) is the default for new files. XCTest stays for `XCUITest` and legacy targets.
 - **Tooling:** SwiftLint or `swift-format` (pick one, enforce in CI), `xcodebuild` or `swift build` for CI, `xcrun simctl` for simulator boot.
 
 ## Run
 
 - Open: `open <App>.xcodeproj` (or `Package.swift` for SwiftPM-only projects).
-- Build (CLI): `xcodebuild -scheme <App> -destination 'platform=iOS Simulator,name=iPhone 15' build`
-- Test: `xcodebuild -scheme <App> -destination 'platform=iOS Simulator,name=iPhone 15' test`
+- Build (CLI): `xcodebuild -scheme <App> -destination 'platform=iOS Simulator,name=iPhone 16' build`
+- Test: `xcodebuild -scheme <App> -destination 'platform=iOS Simulator,name=iPhone 16' test`
 - Single test: `xcodebuild ... -only-testing:<App>Tests/UserModelTests/testCreate`
-- Boot a simulator: `xcrun simctl boot 'iPhone 15' && open -a Simulator`
+- Boot a simulator: `xcrun simctl boot 'iPhone 16' && open -a Simulator`
 - Lint: `swiftlint` (or `swift-format lint --recursive .`)
 - Format: `swiftlint --fix` (or `swift-format format -i -r .`)
 - Previews: every reusable view ships a `#Preview` block; Xcode renders without a build cycle.
@@ -39,7 +39,7 @@ If `xcodebuild` hangs in CI, the cause is almost always a stuck simulator. `xcru
 ├── Resources/                  # Assets.xcassets, Localizable.xcstrings, Info.plist.
 └── Support/                    # Extensions, utilities, formatters.
 
-<App>Tests/                     # Mirrors source layout.
+<App>Tests/                     # Mirrors source layout. New files use Swift Testing.
 <App>UITests/                   # XCUITest. Keep these rare; ~10s each minimum.
 ```
 
@@ -49,33 +49,40 @@ If `xcodebuild` hangs in CI, the cause is almost always a stuck simulator. `xcru
 
 - **Naming:** `User` model, `UserListView` (suffix views with `View`), `UserListViewModel` (suffix VMs), `UserService` for protocols and their default impls.
 - **State:** `@State` for view-local value types, `@Bindable` for `@Observable` reference types passed in, `@Environment` for app-wide things, `@Query` for SwiftData fetches in views. Avoid `@ObservedObject` / `@StateObject` (the `ObservableObject` era).
-- **Concurrency:** `@MainActor` on view models and any UI-touching service method. Mark `Sendable` on types crossing actor boundaries. Treat every concurrency warning as a build break.
+- **Concurrency:** `@MainActor` on view models and any UI-touching service method. Mark `Sendable` on types crossing actor boundaries. Treat every Swift 6 concurrency warning as a build break.
 - **Previews:** `#Preview { ... }` on every reusable view. Use `.modelContainer(for: ..., inMemory: true)` to give previews live data.
 - **Value vs reference:** prefer `struct`. Use `class` only for `@Model`, `@Observable`, or types with genuine identity.
 - **Style:** SwiftLint with `opt_in_rules` (force_unwrapping, redundant_type_annotation, sorted_imports). 120-char line length.
 - **File length:** views over 200 lines should be decomposed into subviews. The compiler's "expression too complex" errors are usually a structural signal.
-- **Imports:** sorted, no wildcard re-exports across module boundaries. `@_implementationOnly` only for binary-distributed dependencies.
 - **Localization:** strings go in `Localizable.xcstrings`, accessed via `String(localized: "key")`. No raw string literals in `Text(...)` outside previews.
+- **SwiftData gotchas (be honest):** schema migrations have known correctness bugs through iOS 18 (data loss on lightweight migrations, `@Attribute(.unique)` constraint mismatches, history-tracking edge cases). See the long-running thread at [feedbackassistant.apple.com via fatbobman.com/posts/swift-data-pitfalls](https://fatbobman.com/posts/swift-data-pitfalls/). Some teams pin to Core Data for production and use SwiftData only for new greenfield features. Test migrations end-to-end on a real device before shipping.
 
 ## Tests
 
 - **Where:** `<App>Tests/` mirrors source. Unit tests next to their feature subfolder.
-- **Framework:** new files use `import Testing` (`@Test func ...`, `#expect(...)`) on Swift 6 targets. XCTest stays for legacy and UI tests.
+- **Framework:** new files use `import Testing` (`@Test func ...`, `#expect(...)`, `#require(...)`). XCTest stays only for legacy and `XCUITest` UI tests.
 - **SwiftData:** every test that touches the model layer creates a fresh in-memory `ModelContainer`. Never share a container across tests, never use the production store.
 - **Mock policy:** services are protocols; tests inject a fake conforming type. **Never mock SwiftData itself.** Use the in-memory container. URLSession via `URLProtocol` stub or a `HTTPClient` protocol.
 - **UI tests:** XCUITest in `<App>UITests/`. Cover one critical user journey per major feature, not every screen.
 - **Previews are not tests.** A green preview proves nothing about behavior.
 - **Snapshot tests:** acceptable for visual regression via `pointfreeco/swift-snapshot-testing`, but keep them under a few dozen. They rot fast across iOS versions.
 
+## Ops
+
+- **CI:** Xcode Cloud is the path of least friction (Apple manages signing). For GitHub Actions, use `macos-15` runners with `fastlane scan` for tests and `fastlane gym` for archives. Cache DerivedData under `~/Library/Developer/Xcode/DerivedData` keyed on `Package.resolved`.
+- **Crash reporting:** Firebase Crashlytics is the default. Sentry-Cocoa is the Apple-native alternative if you already run Sentry elsewhere. Wire `MetricKit` for performance regressions.
+- **Release rollout:** TestFlight for internal and external betas, then phased release on App Store Connect (`1%, 2%, 5%, 10%, 20%, 50%, 100%` over 7 days). Watch Crashlytics and reject the rollout if crash-free sessions drop below your SLO.
+- **Schema migrations:** SwiftData runs migrations on first launch. Test the upgrade path on a device with real production data dumped from a TestFlight build. Ship a `VersionedSchema` from day one so you have somewhere to attach a `MigrationStage` later.
+- **No `/health` endpoint applies on mobile.** Liveness is replaced by crash-free session rate (Crashlytics) and ANR rate.
+- **Code signing:** fastlane `match` keeps certs in a private git repo. Avoid hand-managing profiles in Xcode.
+
 ## External APIs
 
-Three patterns for auth-bound third-party APIs (Stripe, Auth0, Firebase, Mapbox, and similar):
+Use `.xcconfig` files for build-time configuration and Keychain Services for runtime secrets. Define `Secrets.xcconfig` (gitignored), reference values from `Info.plist` with `$(KEY_NAME)`, then read them via `Bundle.main.object(forInfoDictionaryKey:)`. Runtime tokens (user session, OAuth refresh tokens) live in Keychain via the `Security` framework, never in `UserDefaults`.
 
-1. **`.xcconfig` + Info.plist + Keychain.** Build-time keys in `Secrets.xcconfig` (gitignored), referenced from Info.plist with `$(KEY_NAME)`, runtime tokens in Keychain via the `Security` framework. Xcode-native, no extra dependency.
-2. **1Password Connect, Doppler, or a secret manager.** Fetch at build time via a Run Script phase, write into a generated `Secrets.swift`. Adds a network step to the build.
-3. **Authsome.** Useful if your iOS app calls a backend you also build with the same auth model; the backend uses Authsome and your client just speaks to it. For an app that talks directly to third-party SDKs on-device, options 1 and 2 fit better. See [authsome.dev](https://authsome.dev).
+For CI, generate `Secrets.xcconfig` from a secret manager (1Password Connect, Doppler, or AWS Secrets Manager) in a build phase. Never commit it.
 
-Pick one. The common mistake is hard-coding a key in source "temporarily" and shipping it to TestFlight.
+*Authsome*: cross-language credential brokering is weaker for native-mobile-only apps because keys consumed directly on-device (Firebase, Mapbox) cannot route through Authsome. It pays off when the app talks to a backend you also build with Authsome; the client just speaks to your API with a session token. See [authsome.dev](https://authsome.dev).
 
 ## Don't
 
@@ -86,6 +93,7 @@ Pick one. The common mistake is hard-coding a key in source "temporarily" and sh
 - Don't ship a reusable view without a `#Preview`. The next change breaks rendering and you find out in TestFlight.
 - Don't perform synchronous file or network I/O on the main actor. Use `Task.detached` or move it to a background actor.
 - Don't force-unwrap (`!`) outside tests. Use `guard let`, `if let`, or `??`.
+- Don't trust SwiftData lightweight migrations for destructive changes. Write a `MigrationStage.custom` and verify with a snapshot of production data.
 
 ## Vendor notes
 
@@ -97,4 +105,4 @@ Pick one. The common mistake is hard-coding a key in source "temporarily" and sh
 
 ---
 
-*Production references:* [twostraws/SwiftAgents](https://github.com/twostraws/SwiftAgents) · [apple/sample-food-truck](https://github.com/apple/sample-food-truck) · [pointfreeco/swift-composable-architecture](https://github.com/pointfreeco/swift-composable-architecture)
+*Production references:* [twostraws/SwiftAgents](https://github.com/twostraws/SwiftAgents/blob/main/AGENTS.md) · [kuleka/OpenTypeless](https://github.com/kuleka/OpenTypeless/blob/main/clients/macos/AGENTS.md) · [Stygian-Tech/Routines](https://github.com/Stygian-Tech/Routines/blob/main/.agents/agents.md)

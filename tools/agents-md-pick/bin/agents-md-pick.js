@@ -22,6 +22,10 @@ const STACKS = [
   'laravel-11-horizon-postgres',
   'swiftui-swiftdata-xctest',
   'flutter-riverpod-drift',
+  'spring-boot-postgres',
+  'ktor-postgres-exposed',
+  'jetpack-compose-room',
+  'tauri-2-rust-react',
 ];
 
 const REMOTE_BASE = 'https://raw.githubusercontent.com/agentrhq/awesome-agents-md/main/stacks';

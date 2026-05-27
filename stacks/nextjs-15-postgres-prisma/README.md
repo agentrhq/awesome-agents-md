@@ -1,30 +1,32 @@
 ---
 stack_slug: nextjs-15-postgres-prisma
-display_name: Next.js 15 · Postgres 16 · Prisma 5 · Tailwind 3 · Vitest 2
-components: [nextjs-15, react-19, postgres-16, prisma-5, tailwind-3, vitest-2]
+display_name: Next.js 15 · React 19 · Postgres 16 · Prisma 6 · Tailwind 3 · Vitest 3
+components: [nextjs-15, react-19, postgres-16, prisma-6, tailwind-3, vitest-3, node-22]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq
 license: CC0-1.0
 ---
 
-# Next.js 15 + Postgres + Prisma + Tailwind + Vitest
+# Next.js 15 + React 19 + Postgres + Prisma + Tailwind + Vitest
 
-The default modern Node/TS web app stack. Server components by default, Prisma for the database boundary, Tailwind for styling, Vitest for unit and component tests.
+The default modern Node/TS web app stack. Server components by default, Prisma for the database boundary, Tailwind for styling, Vitest for unit and component tests. Turbopack is the dev and build default. PPR splits each route into a static shell plus dynamic islands.
 
 ## Why these choices
 
-- **App Router + server components.** Next 15 is server-first. Pages are static where possible, server components fetch and render, client components stay small.
-- **Prisma over raw SQL.** Typed boundary, generated client, migrations as code. The cost is tight coupling to Prisma's query patterns.
+- **App Router + React 19 server components.** Pages are static where possible; server components fetch and render; client components stay small. Server actions ("use server") replace most ad-hoc `/api/*` handlers.
+- **PPR and Turbopack.** Partial Prerendering ships a static shell with Suspense holes for dynamic data. Turbopack is the dev and `next build` default in 15.x.
+- **Prisma 6 over raw SQL.** Typed boundary, generated client, migrations as code. The cost is tight coupling to Prisma's query patterns.
 - **Tailwind 3.4.** Zero-runtime CSS. Pairs well with server components since the stylesheet ships once.
-- **Vitest over Jest.** Native ESM, faster, same API.
-- **pnpm over npm/yarn.** Speed and strict dep isolation.
+- **Vitest 3 over Jest.** Native ESM, faster, same API.
+- **pnpm 10 over npm/yarn.** Speed and strict dep isolation. Node 22 LTS.
 
 ## What to tune
 
 - Drop the `(marketing)` route group if you don't ship a public marketing site.
 - If you don't run background jobs, drop the `src/server/tasks/` mention; [Inngest](https://www.inngest.com/) or [Trigger.dev](https://trigger.dev) are common Next-friendly alternatives.
 - Swap Prisma's provider to SQLite for local-only dev if Postgres isn't required.
+- If you self-host instead of using Vercel, swap the Ops deploy line for Docker + your reverse proxy.
 
 ## Verification
 

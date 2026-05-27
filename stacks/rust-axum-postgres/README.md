@@ -1,7 +1,7 @@
 ---
 stack_slug: rust-axum-postgres
-display_name: Rust 1.80 · Axum 0.7 · sqlx 0.8 · Postgres 16 · tokio 1
-components: [rust-1.80, axum-0.7, sqlx-0.8, postgres-16, tokio-1, thiserror-1]
+display_name: Rust 1.85 · Axum 0.8 · sqlx 0.8 · Postgres 16 · tokio 1
+components: [rust-1.85, axum-0.8, sqlx-0.8, postgres-16, tokio-1, thiserror-1]
 verified_with: []
 last_verified: 2026-05-27
 maintainer: agentrhq

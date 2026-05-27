@@ -70,27 +70,31 @@ The workflow: pick the stack closest to yours, run the CLI, edit a few lines (ve
 
 ## Stacks
 
-Fifteen stacks. Each folder ships the AGENTS.md plus a short README and five prompts you can use to check it works in your agent.
+Nineteen stacks. Each folder ships the AGENTS.md plus a short README and five prompts you can use to check it works in your agent.
 
 | Stack | Path |
 | --- | --- |
-| Next.js 15 · Postgres 16 · Prisma 5 · Tailwind 3 · Vitest 2 | [stacks/nextjs-15-postgres-prisma](stacks/nextjs-15-postgres-prisma) |
-| Rails 8 · Sidekiq 7 · Postgres 16 · RSpec 6 | [stacks/rails-8-sidekiq-postgres](stacks/rails-8-sidekiq-postgres) |
-| FastAPI 0.115 · Celery 5 · Postgres 16 · pytest 8 | [stacks/fastapi-celery-postgres](stacks/fastapi-celery-postgres) |
-| Django 5.1 · DRF 3.15 · Celery 5.4 · Postgres 16 · pytest 8 | [stacks/django-5-celery-postgres](stacks/django-5-celery-postgres) |
-| NestJS 10 · Prisma 5 · BullMQ · Redis 7 · Jest 29 | [stacks/nestjs-10-prisma-redis](stacks/nestjs-10-prisma-redis) |
-| Go 1.23 · chi v5 · pgx v5 · sqlc · testify | [stacks/go-chi-postgres](stacks/go-chi-postgres) |
-| Bun 1.1 · Hono 4 · SQLite · Drizzle 0.30 · bun:test | [stacks/bun-hono-sqlite](stacks/bun-hono-sqlite) |
-| Rust 1.80 · Axum 0.7 · sqlx 0.8 · Postgres 16 · tokio 1 | [stacks/rust-axum-postgres](stacks/rust-axum-postgres) |
-| Elixir 1.17 · Phoenix 1.7 · Ecto 3 · Postgres 16 · Oban · ExUnit | [stacks/phoenix-ecto-postgres](stacks/phoenix-ecto-postgres) |
-| SvelteKit 2 · Svelte 5 · Drizzle 0.30 · Postgres 16 · Playwright · Vitest 2 | [stacks/sveltekit-drizzle-postgres](stacks/sveltekit-drizzle-postgres) |
-| Astro 4 · Drizzle 0.30 · Postgres 16 · Vitest 2 | [stacks/astro-drizzle-postgres](stacks/astro-drizzle-postgres) |
-| .NET 9 · ASP.NET Core 9 · EF Core 9 · Postgres 16 · xUnit · Testcontainers | [stacks/dotnet-9-aspnetcore-efcore](stacks/dotnet-9-aspnetcore-efcore) |
-| Laravel 11 · Horizon · Postgres 16 · Pest 3 | [stacks/laravel-11-horizon-postgres](stacks/laravel-11-horizon-postgres) |
-| SwiftUI · SwiftData · XCTest (Swift 5.10+ / 6) | [stacks/swiftui-swiftdata-xctest](stacks/swiftui-swiftdata-xctest) |
-| Flutter 3.24+ · Riverpod 2 · Drift · go_router | [stacks/flutter-riverpod-drift](stacks/flutter-riverpod-drift) |
+| Next.js 15 · React 19 · Postgres 16 · Prisma 6 · Vitest 3 | [stacks/nextjs-15-postgres-prisma](stacks/nextjs-15-postgres-prisma) |
+| Rails 8 · Sidekiq 7 · Postgres 16 · RSpec 6 · Kamal 2 | [stacks/rails-8-sidekiq-postgres](stacks/rails-8-sidekiq-postgres) |
+| FastAPI 0.118 · Celery 5.5 · Postgres 16 · pytest 8 · Python 3.13 | [stacks/fastapi-celery-postgres](stacks/fastapi-celery-postgres) |
+| Django 5.2 LTS · DRF 3.16 · Celery 5.5 · Postgres 16 · pytest 8 | [stacks/django-5-celery-postgres](stacks/django-5-celery-postgres) |
+| NestJS 11 · Prisma 6 · BullMQ · Redis 7 · Jest 30 | [stacks/nestjs-10-prisma-redis](stacks/nestjs-10-prisma-redis) |
+| Go 1.26 · chi v5 · pgx v5 · sqlc · testify | [stacks/go-chi-postgres](stacks/go-chi-postgres) |
+| Bun 1.2 · Hono 4.6 · SQLite · Drizzle 0.36 · bun:test | [stacks/bun-hono-sqlite](stacks/bun-hono-sqlite) |
+| Rust 1.85 · Axum 0.8 · sqlx 0.8 · Postgres 16 · tokio 1 | [stacks/rust-axum-postgres](stacks/rust-axum-postgres) |
+| Elixir 1.18 · Phoenix 1.7 · Ecto 3 · Postgres 16 · Oban · ExUnit | [stacks/phoenix-ecto-postgres](stacks/phoenix-ecto-postgres) |
+| SvelteKit 2 · Svelte 5 · Drizzle 0.36 · Postgres 16 · Playwright · Vitest 2 | [stacks/sveltekit-drizzle-postgres](stacks/sveltekit-drizzle-postgres) |
+| Astro 5 · Drizzle 0.36 · Turso (libSQL) · Vitest 2 | [stacks/astro-drizzle-postgres](stacks/astro-drizzle-postgres) |
+| .NET 10 LTS · ASP.NET Core 10 · EF Core 10 · Postgres 16 · xUnit v3 · Aspire | [stacks/dotnet-9-aspnetcore-efcore](stacks/dotnet-9-aspnetcore-efcore) |
+| Laravel 12 · Horizon · Postgres 16 · Pest 3 · Pulse | [stacks/laravel-11-horizon-postgres](stacks/laravel-11-horizon-postgres) |
+| SwiftUI · SwiftData · Swift 6 · Swift Testing · iOS 18+ | [stacks/swiftui-swiftdata-xctest](stacks/swiftui-swiftdata-xctest) |
+| Flutter 3.32+ · Dart 3.5 · Riverpod 2.5 · Drift · go_router | [stacks/flutter-riverpod-drift](stacks/flutter-riverpod-drift) |
+| Java 21 · Spring Boot 3.4 · Spring Data JPA · Flyway · Postgres 17 · JUnit 5 · Testcontainers | [stacks/spring-boot-postgres](stacks/spring-boot-postgres) |
+| Kotlin 2.1 · Ktor 3 · Exposed · Postgres 17 · Kotest · Gradle 8 | [stacks/ktor-postgres-exposed](stacks/ktor-postgres-exposed) |
+| Android · Kotlin 2.1 · Jetpack Compose · Room 2.7 · Hilt 2.52 · Coroutines · Coil 3 | [stacks/jetpack-compose-room](stacks/jetpack-compose-room) |
+| Tauri 2 · Rust 1.85 · React 19 · TypeScript 5.6 · Vite 6 · SQLite · Vitest · Playwright | [stacks/tauri-2-rust-react](stacks/tauri-2-rust-react) |
 
-Five stacks (Go+chi, SvelteKit+Postgres+Playwright, Astro+Drizzle+Postgres, Laravel, Flutter) had no popular AGENTS.md to copy from when this gallery was written. Those entries lean on framework-level conventions instead. Their per-stack README says so up front.
+Stacks without a popular shipping AGENTS.md to copy from (Go+chi, SvelteKit+Drizzle+Postgres+Playwright, Laravel, Flutter, SwiftUI) lean on framework-level conventions and shipping production refs we could find. Their per-stack README says so up front.
 
 ## How to use this
 
@@ -157,11 +161,12 @@ Every entry has these H2 sections, in order:
 3. `## Architecture` (directory map and what lives where)
 4. `## Conventions` (naming, file size limits, comment policy)
 5. `## Tests` (how to run, where to add, what to mock)
-6. `## External APIs` (auth-bound dependencies and the recommended pattern)
-7. `## Don't` (anti-patterns specific to the stack)
-8. `## Vendor notes` (per-vendor deltas: Codex, Cursor, Jules, Aider, Claude Code)
+6. `## Ops` (observability, CI, deploy, health checks)
+7. `## External APIs` (auth-bound dependencies and the recommended pattern)
+8. `## Don't` (anti-patterns specific to the stack)
+9. `## Vendor notes` (per-vendor deltas: Codex, Cursor, Jules, Aider, Claude Code)
 
-CI enforces all eight via [.github/workflows/validate.yml](.github/workflows/validate.yml). Files cap at 200 lines. Long AGENTS.md files [measurably hurt agent performance](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/), around 20% on the cited research.
+CI enforces all nine via [.github/workflows/validate.yml](.github/workflows/validate.yml). Files cap at 200 lines. Long AGENTS.md files [measurably hurt agent performance](https://reddit.com/r/ClaudeAI/comments/1r7mvja/new_research_agentsmd_files_reduce_coding_agent/), around 20% on the cited research.
 
 ## Best practices
 

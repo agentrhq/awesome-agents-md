@@ -1,14 +1,15 @@
-# AGENTS.md · Go 1.23 · chi v5 · pgx v5 · sqlc · testify
+# AGENTS.md · Go 1.26 · chi v5 · pgx v5 · sqlc · testify
 
 ## Stack
 
-- **Language:** Go 1.23. `go.mod` and `go.sum` are source of truth. No vendoring unless air-gapped.
-- **Router:** `github.com/go-chi/chi/v5`. Stdlib `net/http` underneath; no Gin, no Echo.
+- **Language:** Go 1.26 (released Feb 2026). `go.mod` and `go.sum` are source of truth. No vendoring unless air-gapped.
+- **Router:** `github.com/go-chi/chi/v5`. Stdlib `net/http` underneath. No Gin, no Echo, no Fiber.
 - **DB driver:** `github.com/jackc/pgx/v5` (pgxpool). No ORM.
 - **Queries:** `sqlc` generates type-safe Go from `.sql` files. Generated code is committed.
 - **Migrations:** `golang-migrate/migrate` CLI. Up and down files, numbered, never edited after merge.
-- **Tests:** `github.com/stretchr/testify` v1 (`require` + `assert`).
+- **Tests:** `github.com/stretchr/testify` v1 (`require` + `assert`). Testcontainers-go for Postgres.
 - **Lint:** `golangci-lint` (revive, errcheck, gosec, staticcheck, govet, ineffassign).
+- **Go 1.26 notes:** loop-variable per-iteration scoping is the default; range-over-func is stable, use it for iterator returns.
 
 ## Run
 
@@ -50,7 +51,7 @@ internal/
 │   ├── queries/             # *.sql consumed by sqlc.
 │   └── store/               # sqlc output, committed. Do not edit.
 └── config/
-    └── config.go            # Loads env via viper or os.Getenv. One Load() at startup.
+    └── config.go            # Loads env via envconfig or os.Getenv. One Load() at startup.
 
 pkg/                         # Genuinely reusable libs. Empty by default. If unsure, use internal/.
 ```
@@ -70,22 +71,29 @@ The `Server` struct in `cmd/api/main.go` holds dependencies (db pool, queries, l
 ## Tests
 
 - **Where:** co-located. `service.go` + `service_test.go` in the same package.
-- **DB:** real Postgres via Testcontainers-go. Each test starts in its own transaction (`BEGIN; ...; ROLLBACK`) using `pgx.Tx`. **Never mock pgx or sqlc.** Mocked queries pass against broken SQL.
+- **DB:** real Postgres via Testcontainers-go. Each test starts in its own transaction (`BEGIN; ...; ROLLBACK`) using `pgx.Tx`. Never mock pgx or sqlc. Mocked queries pass against broken SQL.
 - **HTTP:** `httptest.NewRecorder()` + `httptest.NewRequest()`. No live `ListenAndServe` in tests.
 - **Assertions:** `require` when subsequent assertions depend on the value (`require.NoError(t, err)`); `assert` when checks are independent and you want to see all failures.
 - **Table tests:** prefer `t.Run(name, func(t *testing.T){ ... })` with a `cases := []struct{...}{}`. Mark with `t.Parallel()` when safe.
-- **HTTP mocks:** `httptest.NewServer` for outbound calls during integration tests. `nhooyr.io/websocket` for socket testing if needed.
+- **HTTP mocks:** `httptest.NewServer` for outbound calls during integration tests.
 - **Time:** inject a `Clock` interface (`Now() time.Time`). Don't call `time.Now()` inside business logic.
+
+## Ops
+
+- **Container:** multi-stage Dockerfile, `golang:1.26-alpine` builder, `gcr.io/distroless/static-debian12` runtime. Static binary, `CGO_ENABLED=0`.
+- **Deploy:** Fly.io, Render, or AWS ECS/Fargate. Graceful shutdown via `http.Server.Shutdown(ctx)` on SIGTERM with a 30s deadline.
+- **Health:** `GET /health` (liveness, no deps) and `GET /ready` (checks `db.Ping(ctx)`). Mount both before auth middleware.
+- **Logging:** `log/slog` with `slog.NewJSONHandler(os.Stdout, ...)` in prod, text handler in dev. Inject a request-scoped logger via middleware so handlers do `slog.InfoContext(ctx, ...)`.
+- **Tracing:** OpenTelemetry Go SDK (`go.opentelemetry.io/otel`) + `otelchi` middleware. OTLP exporter to whatever collector you run.
+- **CI:** GitHub Actions with `actions/setup-go@v5`, `cache: true` for module + build cache. Run `go vet`, `golangci-lint run`, `go test -race ./...`.
+- **Migrations:** run `migrate up` as a separate step in the deploy pipeline. Do not call it from `main.go` at boot.
 
 ## External APIs
 
-Three patterns for auth-bound third-party APIs (Stripe, SendGrid, AWS, Slack, and similar):
-
-1. **viper or `os.Getenv` + .env.** Validate at boot in `internal/config`. Stdlib Go pattern.
-2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; `config.Load()` reads them unchanged.
-3. **Authsome.** Use the Authsome Go client; credentials in `~/.authsome/`, never in env. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
-
-Pick one. Mixing config sources is the most common cause of "passes lint, panics on first request".
+- **Native pattern:** typed `Config` struct loaded once at boot. Use `kelseyhightower/envconfig` (struct-tag driven) or `spf13/viper` for env + file. Add a `Config.Validate()` that returns an error listing every missing or malformed key. `main.go` aborts on `Validate()` failure before binding the port.
+- For teams with rotation policies, layer a secret manager (Doppler, Vault, AWS Secrets Manager) underneath: it injects env vars and the same `Config` code reads them, no app changes.
+- Mixing sources is the most common cause of "passes lint, panics on first request". Pick one resolver and centralize it.
+- Authsome is an alternative when credentials need to rotate without redeploys. See [authsome.dev](https://authsome.dev).
 
 ## Don't
 
@@ -107,4 +115,4 @@ Pick one. Mixing config sources is the most common cause of "passes lint, panics
 
 ---
 
-*Production references:* [go-chi/chi](https://github.com/go-chi/chi) · [sqlc-dev/sqlc](https://github.com/sqlc-dev/sqlc) · [Mi-Bee-Studio/MiBeeNvr](https://github.com/Mi-Bee-Studio/MiBeeNvr/blob/main/internal/api/AGENTS.md)
+*Production references:* [elastic/fleet-server](https://github.com/elastic/fleet-server/blob/main/AGENTS.md) · [grafana/grafanactl](https://github.com/grafana/grafanactl/blob/main/AGENTS.md) · [goodrain/rainbond](https://github.com/goodrain/rainbond/blob/main/AGENTS.md)

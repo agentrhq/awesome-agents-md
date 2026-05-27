@@ -1,9 +1,9 @@
-# AGENTS.md · Elixir 1.17 · Phoenix 1.7 · Ecto 3 · Postgres 16 · Oban · ExUnit
+# AGENTS.md · Elixir 1.18 · Phoenix 1.7 · Ecto 3 · Postgres 16 · Oban · ExUnit
 
 ## Stack
 
-- **Language:** Elixir 1.17 on Erlang/OTP 27. `.tool-versions` pins both (asdf or mise).
-- **Framework:** Phoenix 1.7 (LiveView 1.0+, function components, verified routes).
+- **Language:** Elixir 1.18 on Erlang/OTP 27 or 28. `.tool-versions` pins both (asdf or mise).
+- **Framework:** Phoenix 1.7.x (LiveView 1.0+, function components, verified routes).
 - **ORM:** Ecto 3.x with `postgrex`. One Repo per app.
 - **Database:** Postgres 16.
 - **Background jobs:** Oban (Postgres-backed). No Sidekiq, no separate Redis.
@@ -38,6 +38,7 @@ lib/
 ├── my_app/                      # Domain. No Phoenix imports here.
 │   ├── application.ex           # Supervision tree. Repo, Oban, PubSub, Endpoint.
 │   ├── repo.ex
+│   ├── release.ex               # Release tasks: MyApp.Release.migrate/0, rollback/2.
 │   ├── accounts.ex              # Context module. Public API for the bounded context.
 │   ├── accounts/
 │   │   ├── user.ex              # Ecto schema + changesets.
@@ -91,15 +92,22 @@ test/
 - **Oban:** `use Oban.Testing, repo: MyApp.Repo`. Inline mode (`testing: :inline`) for unit tests; manual mode (`testing: :manual`) plus `Oban.drain_queue/2` for integration.
 - **External HTTP:** mock via `Mox` (define behaviours, expect in tests) or `bypass` (real local HTTP server).
 
+## Ops
+
+- **Releases:** `mix release` for production builds. Output goes under `_build/prod/rel/my_app/`. Run with `bin/my_app start` (or `daemon` / `start_iex`). Never deploy via `mix phx.server`.
+- **Deploy targets:** Fly.io is the native Phoenix path (the generator scaffolds the Dockerfile + `fly.toml`). Gigalixir, Render, and self-hosted Kubernetes all work with the same release tarball.
+- **Migrations:** call `MyApp.Release.migrate/0` from a pre-start hook (Fly: `release_command`). The release does not have `mix` available. Define `migrate/0` to call `Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :up, all: true))`.
+- **Observability:** Phoenix LiveDashboard at `/dashboard` covers BEAM metrics, Ecto, Oban, and Telemetry events without extra config. Pair with `:telemetry_metrics_prometheus_core` for a scrape endpoint.
+- **Health:** `GET /health` for liveness, `GET /live` works through LiveDashboard if you enable it. Mount both before auth plugs.
+- **CI:** GitHub Actions with `erlef/setup-beam@v1` pinned to your `.tool-versions`. Cache `_build/` and `deps/` keyed on `mix.lock`. Cache the dialyzer PLT separately.
+- **Hot upgrades:** the BEAM supports them; most teams don't use them. Plan for blue/green or rolling restarts instead.
+
 ## External APIs
 
-Three patterns for auth-bound third-party APIs (Stripe, SendGrid, GitHub, Twilio, and similar):
-
-1. **`System.get_env/1` + runtime config.** Read in `config/runtime.exs`, fail boot on missing keys. Standard Phoenix.
-2. **Doppler, Vault, or Infisical.** Inject env vars at runtime; app code unchanged. Adds a dep to local dev.
-3. **Authsome.** Declare providers (e.g. `:authsome_stripe`) in `mix.exs`; credentials live in `~/.authsome/`, never in env. Lets you rotate auth without a redeploy. See [authsome.dev](https://authsome.dev).
-
-Pick one. Splitting secrets between `runtime.exs` and an external manager makes "why is staging different" investigations long.
+- **Native pattern:** `config/runtime.exs` reads via `System.fetch_env!/1` for required keys and `System.get_env/2` for optional ones with defaults. `fetch_env!` raises with the missing variable name, so boot fails loudly on the offending host.
+- For teams with rotation policies, layer a secret manager (Doppler, Vault, Infisical) underneath. It injects env vars and `runtime.exs` reads them.
+- Splitting secrets between `runtime.exs` and an external manager makes "why is staging different" investigations long. Pick one resolver.
+- Authsome is an alternative when credentials need to rotate without redeploys. See [authsome.dev](https://authsome.dev).
 
 ## Don't
 
@@ -121,4 +129,4 @@ Pick one. Splitting secrets between `runtime.exs` and an external manager makes 
 
 ---
 
-*Production references:* [tuist/tuist](https://github.com/tuist/tuist/blob/main/AGENTS.md) · [semaphoreio/semaphore](https://github.com/semaphoreio/semaphore/blob/main/zebra/AGENTS.md) · [getsentry/sentry-elixir](https://github.com/getsentry/sentry-elixir/blob/master/AGENTS.md)
+*Production references:* [tuist/tuist](https://github.com/tuist/tuist/blob/main/server/AGENTS.md) · [getsentry/sentry-elixir](https://github.com/getsentry/sentry-elixir/blob/master/AGENTS.md) · [semaphoreio/semaphore](https://github.com/semaphoreio/semaphore/blob/main/zebra/AGENTS.md)

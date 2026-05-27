@@ -10,6 +10,7 @@ const REQUIRED_H2S = [
   '## Architecture',
   '## Conventions',
   '## Tests',
+  '## Ops',
   '## External APIs',
   "## Don't",
   '## Vendor notes',
