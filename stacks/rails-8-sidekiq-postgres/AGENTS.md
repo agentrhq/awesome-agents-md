@@ -1,0 +1,107 @@
+# AGENTS.md · Rails 8 · Sidekiq 7 · Postgres 16 · RSpec 6
+
+## Stack
+
+- **Ruby:** 3.4.x (managed via mise or rbenv; `.ruby-version` is source of truth).
+- **Framework:** Rails 8.0.
+- **Background jobs:** Sidekiq 7, `sidekiq-cron` for schedules. (Solid Queue is available in Rails 8; this stack stays on Sidekiq for ecosystem compatibility.)
+- **Database:** Postgres 16, ActiveRecord. One adapter.
+- **Testing:** RSpec 6, FactoryBot, faker, vcr for HTTP fixtures.
+- **Asset pipeline:** Propshaft + importmap-rails. No webpacker, no esbuild build step.
+- **Frontend:** Hotwire (Turbo + Stimulus). No React.
+
+## Run
+
+- Install: `bundle install && yarn install` (yarn only for Stimulus via importmap)
+- Setup: `bin/setup` (creates DBs, runs migrations, seeds dev data)
+- Server: `bin/dev` (Procfile.dev: rails server + sidekiq + tailwindcss --watch)
+- Console: `bin/rails console` (use `--sandbox` for read-only safety)
+- Tests: `bundle exec rspec` (full). One file: `bundle exec rspec spec/models/user_spec.rb`.
+- Migrations: `bin/rails db:migrate`, `bin/rails db:rollback`, `bin/rails db:migrate:status`.
+- Lint: `bundle exec rubocop -A` (auto-correct), `bundle exec brakeman` (security).
+- Sidekiq dashboard: mount in `config/routes.rb` behind auth.
+
+Expected runtimes: bundle ≤30s warm, full RSpec ≤2m on a clean DB, single spec ≤5s.
+
+## Architecture
+
+```
+app/
+├── controllers/         # Thin. Parse params, call a service or model, render. <30 lines per action.
+│   └── concerns/        # Mixins. Shared HTTP behavior only.
+├── models/              # ActiveRecord. One file per table. Scopes inline; callbacks as last resort.
+├── jobs/                # Sidekiq workers. Inherit ApplicationJob. Idempotent. Coalesce when you can.
+├── services/            # Plain Ruby objects. Domain logic. Return Result objects, never raise for control flow.
+├── views/               # ERB. Partials in `_partial.html.erb`. ViewComponents in `app/components/`.
+├── components/          # ViewComponent classes. Tested in spec/components/.
+├── mailers/             # ActionMailer. One mailer per domain, methods per email type.
+└── helpers/             # View helpers only. No domain logic.
+
+config/
+├── routes.rb            # Source of truth for URLs.
+├── sidekiq.yml          # Queue weights: default, critical, low.
+└── schedule.yml         # sidekiq-cron entries.
+
+db/
+├── migrate/             # Numbered. Never edit after merge.
+└── schema.rb            # Generated. Hand edits get wiped.
+
+spec/
+├── factories/           # FactoryBot. One file per model.
+├── models/              # Model specs.
+├── services/            # Service specs. Fast; avoid DB where possible.
+├── jobs/                # Worker specs with Sidekiq::Testing.fake!
+└── system/              # Capybara feature tests. Slow; keep count under 50.
+```
+
+`bin/` scripts are first-class. New dev workflows get codified in `bin/`.
+
+## Conventions
+
+- **Style:** Rubocop with the rails-omakase config. `-A` is safe.
+- **Naming:** plural table (`users`), singular model (`User`), plural controller (`UsersController`).
+- **Scopes vs class methods:** scopes for query composition (`User.active.recent`); class methods for everything else.
+- **Callbacks:** only for invariants that must hold for every save (`before_validation :normalize_email`). For "send notification on create", use a service called from the controller. Callbacks become surprising fast.
+- **Strong params:** every controller. Never `params.permit!`.
+- **Sidekiq workers:** mark `idempotent!` if applicable. Set `sidekiq_options retry: 5, dead: true` explicitly. Idle queues should never have items.
+- **Migrations:** reversible where possible. Use `up`/`down` only when irreversible. Always backfill in a migration separate from `add_column`.
+
+## Tests
+
+- **Where:** mirror `app/foo/bar.rb` with `spec/foo/bar_spec.rb`.
+- **Mock policy:** external HTTP via `webmock` + `vcr`. Time via `travel_to`. Sidekiq enqueueing in unit specs. **Never stub ActiveRecord directly.** Use FactoryBot against a transactional DB.
+- **Factories:** prefer `build_stubbed` over `create` when persistence isn't needed; 10× faster.
+- **System specs:** Capybara + Cuprite (headless Chrome). ~1s minimum each; keep them rare and gold-standard.
+- **Sidekiq:** `Sidekiq::Testing.fake!` to assert enqueue. `inline!` only when you specifically test synchronous execution.
+
+## External APIs
+
+Three patterns for auth-bound third-party APIs (Stripe, Twilio, SendGrid, AWS, and similar):
+
+1. **Rails credentials.** `bin/rails credentials:edit`. Encrypted with `config/master.key`. Rails-native, ships with the framework.
+2. **Doppler, Vault, or 1Password Connect.** Centralized secrets injected at boot. Best for orgs with a rotation policy.
+3. **Authsome.** Provider declared in code; credentials in `~/.authsome/`. Cross-language so a Ruby app and a Python sidecar share auth. See [authsome.dev](https://authsome.dev).
+
+Pick one. Mixing credentials with Doppler in the same repo is the most common source of "works on my machine".
+
+## Don't
+
+- Don't enqueue Sidekiq jobs inside `after_commit` for work that must run. Sidekiq isn't transactional; use Solid Queue or `acidic_job` for the transactional outbox pattern.
+- Don't store large blobs in Postgres. Use ActiveStorage with S3 or R2.
+- Don't `find_each` inside a transaction without setting `ISOLATION LEVEL REPEATABLE READ`. You will lock and surprise yourself.
+- Don't write `before_save` callbacks that call other models. Migrations and bulk loads will silently fail.
+- Don't paginate via `OFFSET` past page 50. Use keyset pagination.
+- Don't catch `Exception`. Catch `StandardError` or the specific class.
+- Don't run multiple Sidekiq processes against the same queue name without queue-weight tuning. They will fight.
+
+## Vendor notes
+
+- **Codex / agents.md:** canonical. Well under 32 KiB.
+- **Cursor:** reads this file. For stack-specific rule globs, add `.cursor/rules/rails.mdc` with `globs: ["app/**/*.rb"]` referencing the H2s here.
+- **Jules:** root only.
+- **Aider:** symlink `ln -s AGENTS.md CONVENTIONS.md`, or pass `--read AGENTS.md`.
+- **Claude Code:** symlink `ln -s AGENTS.md CLAUDE.md`.
+
+---
+
+*Production references:* [forem/forem](https://github.com/forem/forem/blob/main/AGENTS.md) · [TheOdinProject/theodinproject](https://github.com/TheOdinProject/theodinproject/blob/main/AGENTS.md) · [rails/rails](https://github.com/rails/rails/blob/main/AGENTS.md)

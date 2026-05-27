@@ -1,0 +1,49 @@
+name: Propose a new stack
+description: Suggest a stack for the gallery
+labels: [new-stack]
+body:
+  - type: input
+    id: stack_slug
+    attributes:
+      label: Stack slug
+      description: kebab-case; becomes the folder name under stacks/
+      placeholder: e.g. django-celery-postgres
+    validations:
+      required: true
+
+  - type: input
+    id: display_name
+    attributes:
+      label: Display name
+      description: Use middle dots. No em-dashes.
+      placeholder: Django 5 · Celery · Postgres 16 · pytest 8
+    validations:
+      required: true
+
+  - type: textarea
+    id: components
+    attributes:
+      label: Components and exact versions
+      placeholder: |
+        - django 5.0
+        - celery 5.4
+        - postgres 16
+        - pytest 8
+    validations:
+      required: true
+
+  - type: textarea
+    id: refs
+    attributes:
+      label: 3+ production repos that use this stack
+      description: Links to repos whose conventions we can lean on. They do not need to ship an AGENTS.md today.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: agree
+    attributes:
+      label: Acknowledgement
+      options:
+        - label: I am willing to author the entry, or I am opening this for someone else to pick up.
+          required: true

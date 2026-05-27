@@ -1,0 +1,79 @@
+name: validate
+
+on:
+  pull_request:
+    paths:
+      - 'stacks/**/AGENTS.md'
+      - 'stacks/**/README.md'
+      - '.github/workflows/validate.yml'
+  push:
+    branches: [main]
+
+jobs:
+  schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate AGENTS.md schema and length cap
+        run: |
+          set -u
+          REQUIRED=("## Stack" "## Run" "## Architecture" "## Conventions" "## Tests" "## External APIs" "## Don't" "## Vendor notes")
+          MAX_LINES=200
+          fail=0
+
+          while IFS= read -r f; do
+            echo "::group::$f"
+            lines=$(wc -l < "$f" | tr -d ' ')
+            if [ "$lines" -gt "$MAX_LINES" ]; then
+              echo "::error file=$f::file is $lines lines, max is $MAX_LINES"
+              fail=1
+            fi
+            for h in "${REQUIRED[@]}"; do
+              if ! grep -qF "$h" "$f"; then
+                echo "::error file=$f::missing required section '$h'"
+                fail=1
+              fi
+            done
+            echo "::endgroup::"
+          done < <(find stacks -type f -name AGENTS.md)
+
+          exit $fail
+
+      - name: Validate per-stack README frontmatter
+        run: |
+          set -u
+          REQUIRED_KEYS=("stack_slug" "display_name" "components" "verified_with" "last_verified" "maintainer" "license")
+          fail=0
+
+          while IFS= read -r f; do
+            echo "::group::$f"
+            if ! head -1 "$f" | grep -qx -- '---'; then
+              echo "::error file=$f::missing YAML frontmatter (first line must be '---')"
+              fail=1
+              echo "::endgroup::"
+              continue
+            fi
+            for k in "${REQUIRED_KEYS[@]}"; do
+              if ! awk '/^---$/{c++; next} c==1' "$f" | grep -qE "^${k}:"; then
+                echo "::error file=$f::frontmatter missing '${k}'"
+                fail=1
+              fi
+            done
+            echo "::endgroup::"
+          done < <(find stacks -mindepth 2 -maxdepth 2 -type f -name README.md)
+
+          exit $fail
+
+      - name: Reject em-dashes in stack content
+        run: |
+          set -u
+          fail=0
+          while IFS= read -r f; do
+            if grep -nP '\xe2\x80\x94' "$f" > /tmp/dashes 2>/dev/null; then
+              echo "::error file=$f::em-dash found (use period, comma, or middle dot)"
+              cat /tmp/dashes
+              fail=1
+            fi
+          done < <(find stacks README.md CONTRIBUTING.md -type f -name '*.md' 2>/dev/null)
+          exit $fail
